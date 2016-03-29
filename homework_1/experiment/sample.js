@@ -24,12 +24,32 @@ function draw_grid(){
 	var canvas = document.getElementById("grid");
 	//set 2d grid
 	var context = canvas.getContext("2d");
+
+	var gridHeight = 100;
+	var gridWidth = 100;
+
+	context.beginPath();
+	
+	context.moveTo(0,0);
+	context.lineTo(100, 0);
+
+	context.moveTo(100, 0);
+	context.lineTo(100, 100);
+
+	context.moveTo(0, 0);
+	context.lineTo(0, 100);
+
+	context.moveTo(0, 100);
+	context.lineTo(100, 100);
+
+	context.strokeStyle = "green";
+	context.stroke();
 	
 	//color for fill
-	context.fillStyle = "red";
+	//context.fillStyle = "red";
 
 	//location and size of the rectangle  
-	context.fillRect(10, 10, 100, 100);
+	//context.fillRect(10, 10, gridWidth, gridHeight);
 
 }
 
