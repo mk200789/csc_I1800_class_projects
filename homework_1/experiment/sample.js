@@ -1,28 +1,34 @@
 $(document).ready(function(){
-	//instantiate a new city 
-	var city1 = new city("Brooklyn", "New York");
+	//instantiate a new city taking in city, x, and y value
+	var city = new City("Brooklyn", 100, 100);
 
-	console.log(city1.name);
+	console.log(city.name);
 
-	document.getElementById("cityname").innerHTML = city1.name;
-	console.log(city1.state);
-	city1.hellocity();
+	document.getElementById("cityname").innerHTML = city.name;
+
+	city.addCity("Queens", 200, 100);
+
+	console.log(city.city_list);
+
 	draw_grid();
 });
 
 //city class
-var city = function(name, state){
+var City = function(name, x_coord, y_coord){
 	//having the property name
+	this.city_list = [{name, x_coord, y_coord}];
+
 	this.name = name;
-	this.state = state;
+	this.x = x_coord;
+	this.y = y_coord;
+
 	console.log("City instantiated!");
 };
 
-//method class hellocity for the class city
-city.prototype.hellocity = function(){
-	console.log("You are in " + this.name + ".");
+//method class addCity for adding new city to city_list
+City.prototype.addCity = function(name, x_coord, y_coord){
+	this.city_list.push({name, x_coord, y_coord});
 }
-
 
 function draw_grid(){
 	console.log("GRID!");
