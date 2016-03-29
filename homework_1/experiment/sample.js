@@ -1,14 +1,18 @@
 $(document).ready(function(){
-	var city1 = new city("Brooklyn");
+	//instantiate a new city 
+	var city1 = new city("Brooklyn", "New York");
 
 	console.log(city1.name);
 
-	//document.getElementById("cityname").value = city1.name;
 	document.getElementById("cityname").innerHTML = city1.name;
+	console.log(city1.state);
 });
 
-var city = function(name){
+//city class
+var city = function(name, state){
+	//having the property name
 	this.name = name;
+	this.state = state;
 	console.log("City instantiated!");
 };
 
