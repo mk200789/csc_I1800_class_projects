@@ -44,9 +44,16 @@ function draw_grid(){
 			}
 		}
 	}
-
 	context.strokeStyle = "green";
 	context.stroke();
+
+	context.strokeStyle = "red";
+	//context.fillRect(95, 95, 10, 10);
+	context.fillRect(cell-5, cell-5, 10, 10);
+
+
+	
+	
 /*
 	context.beginPath();
 
