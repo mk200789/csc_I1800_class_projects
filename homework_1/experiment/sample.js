@@ -6,6 +6,7 @@ $(document).ready(function(){
 
 	document.getElementById("cityname").innerHTML = city1.name;
 	console.log(city1.state);
+	draw_grid();
 });
 
 //city class
@@ -16,5 +17,20 @@ var city = function(name, state){
 	console.log("City instantiated!");
 };
 
+
+function draw_grid(){
+	console.log("GRID!");
+	//create a new canvas
+	var canvas = document.getElementById("grid");
+	//set 2d grid
+	var context = canvas.getContext("2d");
+	
+	//color for fill
+	context.fillStyle = "red";
+
+	//location and size of the rectangle  
+	context.fillRect(10, 10, 100, 100);
+
+}
 
 
