@@ -47,9 +47,19 @@ function draw_grid(){
 	context.strokeStyle = "green";
 	context.stroke();
 
+	//context.strokeStyle = "red";
+	//draws a rectangle
+	//context.fillRect(cell-5, cell-5, 10, 10);
+
+	context.beginPath();
 	context.strokeStyle = "red";
-	//context.fillRect(95, 95, 10, 10);
-	context.fillRect(cell-5, cell-5, 10, 10);
+	//draws a rectangle
+	//context.fillRect(cell-5, cell-5, 10, 10);
+	//draws a circle
+	context.fillStyle = "red";
+	context.arc(cell, cell, 5, 0, 2 * Math.PI);
+	context.fill();
+	context.stroke();
 
 
 	
