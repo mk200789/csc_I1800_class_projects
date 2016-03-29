@@ -6,6 +6,7 @@ $(document).ready(function(){
 
 	document.getElementById("cityname").innerHTML = city1.name;
 	console.log(city1.state);
+	city1.hellocity();
 	draw_grid();
 });
 
@@ -16,6 +17,11 @@ var city = function(name, state){
 	this.state = state;
 	console.log("City instantiated!");
 };
+
+//method class hellocity for the class city
+city.prototype.hellocity = function(){
+	console.log("You are in " + this.name + ".");
+}
 
 
 function draw_grid(){
@@ -60,33 +66,6 @@ function draw_grid(){
 	context.arc(cell, cell, 5, 0, 2 * Math.PI);
 	context.fill();
 	context.stroke();
-
-
-	
-	
-/*
-	context.beginPath();
-
-	context.moveTo(0,0);
-	context.lineTo(100, 0);
-
-	context.moveTo(100, 0);
-	context.lineTo(100, 100);
-
-	context.moveTo(0, 0);
-	context.lineTo(0, 100);
-
-	context.moveTo(0, 100);
-	context.lineTo(100, 100);
-
-	context.strokeStyle = "green";
-	context.stroke();
-*/	
-	//color for fill
-	//context.fillStyle = "red";
-
-	//location and size of the rectangle  
-	//context.fillRect(10, 10, gridWidth, gridHeight);
 
 }
 
