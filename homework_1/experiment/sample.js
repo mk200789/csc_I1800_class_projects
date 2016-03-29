@@ -25,11 +25,31 @@ function draw_grid(){
 	//set 2d grid
 	var context = canvas.getContext("2d");
 
-	var gridHeight = 100;
-	var gridWidth = 100;
+	var cell = 50;
 
+	//holds value of previous x, and y value for drawing lines
+	var prevx = 0;
+	var prevy = 0;
 	context.beginPath();
-	
+
+	for (var row = 0; row < 500; row += cell){
+		for (var i = 0; i <500; i+=cell){
+			context.moveTo(prevx, row);
+			context.lineTo(i, row);
+			prevx = i;
+			for(var j = 0; j<500; j+=cell){
+				context.moveTo(i, prevy);
+				context.lineTo(i, j);
+				prevy = j;
+			}
+		}
+	}
+
+	context.strokeStyle = "green";
+	context.stroke();
+/*
+	context.beginPath();
+
 	context.moveTo(0,0);
 	context.lineTo(100, 0);
 
@@ -44,7 +64,7 @@ function draw_grid(){
 
 	context.strokeStyle = "green";
 	context.stroke();
-	
+*/	
 	//color for fill
 	//context.fillStyle = "red";
 
