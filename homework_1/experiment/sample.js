@@ -13,22 +13,23 @@ $(document).ready(function(){
 	draw_grid();
 });
 
-//city class
-var City = function(name, x_coord, y_coord){
-	//having the property name
-	this.city_list = [{name, x_coord, y_coord}];
 
-	this.name = name;
-	this.x = x_coord;
-	this.y = y_coord;
+class City {
+	constructor(name, x_coord, y_coord){
+		this.city_list = [{name, x_coord, y_coord}];
 
-	console.log("City instantiated!");
-};
+		this.name = name;
+		this.x = x_coord;
+		this.y = y_coord;
 
-//method class addCity for adding new city to city_list
-City.prototype.addCity = function(name, x_coord, y_coord){
-	this.city_list.push({name, x_coord, y_coord});
+		console.log("City instantiated!");
+	}
+
+	addCity(name, x_coord, y_coord){
+		this.city_list.push({name, x_coord, y_coord});
+	}
 }
+
 
 function draw_grid(){
 	console.log("GRID!");
