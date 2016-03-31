@@ -1,22 +1,19 @@
 $(document).ready(function(){
 	//instantiate a new city taking in city, x, and y value
-	var city = new City("Brooklyn", 100, 100);
+	var city = new City(100, 100, "Brooklyn");
 
 	console.log(city.name);
 
 	document.getElementById("cityname").innerHTML = city.name;
 
-	city.addCity("Queens", 200, 350);
-
-	console.log(city.city_list);
-
 	draw_grid();
+	city.randomPopulate();
 	city.drawCity();
 });
 
 
 class City {
-	constructor(name, x_coord, y_coord){
+	constructor(x_coord, y_coord, name = ""){
 		this.city_list = [{name, x_coord, y_coord}];
 
 		this.name = name;
@@ -26,9 +23,22 @@ class City {
 		console.log("City instantiated!");
 	}
 
-	addCity(name, x_coord, y_coord){
+	addCity(x_coord, y_coord, name = ""){
 		//add new city 
-		this.city_list.push({name, x_coord, y_coord});
+		this.city_list.push({x_coord, y_coord, name});
+	}
+
+	randomPopulate(){
+		//randomly populates 10 cities
+
+		for (var i=0; i<10; i++){
+			var x = getRandomInt(0, 500);
+			var y = getRandomInt(0, 500);
+			this.addCity(x, y);
+		}
+
+		console.log("finish adding 10 random cities.");
+		console.log(this.city_list);
 	}
 
 	drawCity(){
@@ -36,8 +46,6 @@ class City {
 		var canvas = document.getElementById("grid");
 
 		var context = canvas.getContext("2d");
-
-		let cell = 10;
 
 		context.strokeStyle = "red";
 		context.fillStyle = "red";
@@ -68,14 +76,13 @@ function draw_grid(){
 	var prevx = 0;
 	var prevy = 0;
 	context.beginPath();
-	context.lineWidth = 1;
 
 	for (var row = 0; row < 500; row += cell){
-		for (var i = 0; i <500; i+=cell){
+		for (var i = 0; i < 500; i+=cell){
 			context.moveTo(prevx, row);
 			context.lineTo(i, row);
 			prevx = i;
-			for(var j = 0; j<500; j+=cell){
+			for(var j = 0; j < 500; j+=cell){
 				context.moveTo(i, prevy);
 				context.lineTo(i, j);
 				prevy = j;
@@ -94,6 +101,13 @@ function draw_grid(){
 	context.stroke();
 */
 
+}
+
+
+// Returns a random integer between min (included) and max (included)
+// Using Math.round() will give you a non-uniform distribution!
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 
