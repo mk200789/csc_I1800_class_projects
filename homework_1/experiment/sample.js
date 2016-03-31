@@ -37,12 +37,13 @@ function draw_grid(){
 	//set 2d grid
 	var context = canvas.getContext("2d");
 
-	var cell = 50;
+	var cell = 10;
 
 	//holds value of previous x, and y value for drawing lines
 	var prevx = 0;
 	var prevy = 0;
 	context.beginPath();
+	context.lineWidth = 1;
 
 	for (var row = 0; row < 500; row += cell){
 		for (var i = 0; i <500; i+=cell){
@@ -69,7 +70,7 @@ function draw_grid(){
 	//context.fillRect(cell-5, cell-5, 10, 10);
 	//draws a circle
 	context.fillStyle = "red";
-	context.arc(cell, cell, 5, 0, 2 * Math.PI);
+	context.arc(cell, cell, 2, 0, 2 * Math.PI);
 	context.fill();
 	context.stroke();
 
