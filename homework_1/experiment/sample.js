@@ -37,7 +37,6 @@ class City {
 			this.addCity(x, y);
 		}
 		console.log("finish adding 10 random cities.");
-		console.log(this.city_list);
 	}
 
 	drawCity(){
@@ -50,7 +49,6 @@ class City {
 		context.fillStyle = "red";
 
 		for (let city of this.city_list) {
-			console.log(city);
 			context.beginPath();
 			context.arc(city.x_coord, city.y_coord, 2, 0, 2 * Math.PI);
 			context.fill();
@@ -90,16 +88,6 @@ function draw_grid(){
 	}
 	context.strokeStyle = "green";
 	context.stroke();
-/*
-	context.beginPath();
-	context.strokeStyle = "red";
-	//draws a circle
-	context.fillStyle = "red";
-	context.arc(cell, cell, 2, 0, 2 * Math.PI);
-	context.fill();
-	context.stroke();
-*/
-
 }
 
 
