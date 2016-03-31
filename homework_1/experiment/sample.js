@@ -27,10 +27,12 @@ class City {
 	}
 
 	addCity(name, x_coord, y_coord){
+		//add new city 
 		this.city_list.push({name, x_coord, y_coord});
 	}
 
 	drawCity(){
+		//plots the city on canvas
 		var canvas = document.getElementById("grid");
 
 		var context = canvas.getContext("2d");
@@ -39,7 +41,7 @@ class City {
 
 		context.strokeStyle = "red";
 		context.fillStyle = "red";
-		
+
 		for (let city of this.city_list) {
 			console.log(city);
 			context.beginPath();
@@ -53,6 +55,7 @@ class City {
 
 
 function draw_grid(){
+	//draws the grid
 	console.log("GRID!");
 	//create a new canvas
 	var canvas = document.getElementById("grid");
