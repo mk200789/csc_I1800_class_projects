@@ -14,26 +14,27 @@ $(document).ready(function(){
 
 class City {
 	constructor(x_coord, y_coord, name = ""){
-		this.city_list = [{name, x_coord, y_coord}];
 
 		this.name = name;
 		this.x = x_coord;
 		this.y = y_coord;
+
+		this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name}];
 
 		console.log("City instantiated!");
 	}
 
 	addCity(x_coord, y_coord, name = ""){
 		//add a new city 
-		this.city_list.push({x_coord, y_coord, name});
+		this.city_list.push({'x':x_coord, 'y':y_coord, 'name':name});
 	}
 
 	randomPopulate(){
 		//randomly populates 10 cities
 
 		for (var i=0; i<10; i++){
-			var x = getRandomInt(0, 500);
-			var y = getRandomInt(0, 500);
+			var x = getRandomInt(1, 490);
+			var y = getRandomInt(1, 490);
 			this.addCity(x, y);
 		}
 		console.log("finish adding 10 random cities.");
@@ -50,11 +51,19 @@ class City {
 
 		for (let city of this.city_list) {
 			context.beginPath();
-			context.arc(city.x_coord, city.y_coord, 2, 0, 2 * Math.PI);
+			context.arc(city.x, city.y, 2, 0, 2 * Math.PI);
 			context.fill();
 			context.stroke();
 		}
 		
+	}
+}
+
+class SimulatedAnnealing {
+	constructor(temp, cooling, freezing){
+		this.temperature = temp;
+		this.cooling = cooling;
+		this.freezing = freezing;
 	}
 }
 
