@@ -24,7 +24,7 @@ class City {
 	}
 
 	addCity(x_coord, y_coord, name = ""){
-		//add new city 
+		//add a new city 
 		this.city_list.push({x_coord, y_coord, name});
 	}
 
@@ -36,7 +36,6 @@ class City {
 			var y = getRandomInt(0, 500);
 			this.addCity(x, y);
 		}
-
 		console.log("finish adding 10 random cities.");
 		console.log(this.city_list);
 	}

@@ -1,0 +1,11 @@
+body{
+	margin: 50px;
+}
+
+.grid_container{
+	padding: 5px;
+}
+
+#cityname{
+	color: #CB4D8C;
+}
