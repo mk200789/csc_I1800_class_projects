@@ -6,11 +6,12 @@ $(document).ready(function(){
 
 	document.getElementById("cityname").innerHTML = city.name;
 
-	city.addCity("Queens", 200, 100);
+	city.addCity("Queens", 200, 350);
 
 	console.log(city.city_list);
 
 	draw_grid();
+	city.drawCity();
 });
 
 
@@ -27,6 +28,26 @@ class City {
 
 	addCity(name, x_coord, y_coord){
 		this.city_list.push({name, x_coord, y_coord});
+	}
+
+	drawCity(){
+		var canvas = document.getElementById("grid");
+
+		var context = canvas.getContext("2d");
+
+		let cell = 10;
+
+		context.strokeStyle = "red";
+		context.fillStyle = "red";
+		
+		for (let city of this.city_list) {
+			console.log(city);
+			context.beginPath();
+			context.arc(city.x_coord, city.y_coord, 2, 0, 2 * Math.PI);
+			context.fill();
+			context.stroke();
+		}
+		
 	}
 }
 
@@ -60,20 +81,15 @@ function draw_grid(){
 	}
 	context.strokeStyle = "green";
 	context.stroke();
-
-	//context.strokeStyle = "red";
-	//draws a rectangle
-	//context.fillRect(cell-5, cell-5, 10, 10);
-
+/*
 	context.beginPath();
 	context.strokeStyle = "red";
-	//draws a rectangle
-	//context.fillRect(cell-5, cell-5, 10, 10);
 	//draws a circle
 	context.fillStyle = "red";
 	context.arc(cell, cell, 2, 0, 2 * Math.PI);
 	context.fill();
 	context.stroke();
+*/
 
 }
 
