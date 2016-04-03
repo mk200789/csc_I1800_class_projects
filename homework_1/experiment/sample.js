@@ -20,7 +20,18 @@ class City {
 		this.y = y_coord;
 
 		this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name}];
-
+		/*
+		this.city_list = [{'x': 407, 'y': 121, 'name': ""},
+						  {'x': 412, 'y': 200, 'name': ""},
+						  {'x': 198, 'y': 481, 'name': ""},
+						  {'x': 143, 'y': 196, 'name': ""},
+						  {'x': 153, 'y': 233, 'name': ""},
+						  {'x': 178, 'y': 395, 'name': ""},
+						  {'x': 234, 'y': 15, 'name': ""},
+						  {'x': 367, 'y': 173, 'name': ""},
+						  {'x': 385, 'y': 376, 'name': ""},
+						  {'x': 125, 'y': 272, 'name': ""}];
+		*/
 		console.log("City instantiated!");
 	}
 
@@ -33,9 +44,7 @@ class City {
 		//randomly populates 10 cities
 
 		for (var i=0; i<10; i++){
-			var x = getRandomInt(1, 490);
-			var y = getRandomInt(1, 490);
-			this.addCity(x, y);
+			this.addCity(getRandomInt(1, 490), getRandomInt(1, 490));
 		}
 		console.log("finish adding 10 random cities.");
 	}
