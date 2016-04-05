@@ -27,7 +27,7 @@ class City {
 						  {'x': 143, 'y': 196, 'name': ""},
 						  {'x': 153, 'y': 233, 'name': ""},
 						  {'x': 178, 'y': 395, 'name': ""},
-						  {'x': 234, 'y': 15, 'name': ""},
+						  {'x': 234, 'y': 15,  'name': ""},
 						  {'x': 367, 'y': 173, 'name': ""},
 						  {'x': 385, 'y': 376, 'name': ""},
 						  {'x': 125, 'y': 272, 'name': ""}];
@@ -106,6 +106,11 @@ function draw_grid(){
 	}
 	context.strokeStyle = "green";
 	context.stroke();
+}
+
+//Returns the distance between two points
+function getDistance(p1, p2){
+	return Math.sqrt((p1[0]-p2[0])*(p1[0]-p2[0]) + (p1[0]-p2[0])*(p1[1]-p2[1]));
 }
 
 
