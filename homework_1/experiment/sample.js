@@ -73,6 +73,8 @@ class SimulatedAnnealing {
 		this.temperature = temp;
 		this.cooling = cooling;
 		this.freezing = freezing;
+		this.best_cost = 0; //keeps track of the best cost
+		this.best = [];
 	}
 }
 
