@@ -76,6 +76,10 @@ class SimulatedAnnealing {
 		this.best_cost = 0; //keeps track of the best cost
 		this.best = [];
 	}
+
+	getCost(path){
+		//return cost of a path
+	}
 }
 
 
