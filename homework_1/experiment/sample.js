@@ -9,6 +9,9 @@ $(document).ready(function(){
 	draw_grid();
 	city.randomPopulate();
 	city.drawCity();
+
+	var testtsa = new SimulatedAnnealing(0.1, 0.99, 0.001, city.city_list);
+	testtsa.getCost();
 });
 
 
@@ -69,16 +72,25 @@ class City {
 }
 
 class SimulatedAnnealing {
-	constructor(temp, cooling, freezing){
+	constructor(temp, cooling, freezing, cities){
 		this.temperature = temp;
 		this.cooling = cooling;
 		this.freezing = freezing;
 		this.best_cost = 0; //keeps track of the best cost
-		this.best = [];
+		this.best = cities; //set current cities to best
+		this.cities = cities;
+		this.best_cost = 0;
+	}
+
+	start(count){
+		//loops around count times  to find optimum path
 	}
 
 	getCost(path){
 		//return cost of a path
+		var cost = 0;
+
+		console.log(this.cities.length);
 	}
 }
 
