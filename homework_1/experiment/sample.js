@@ -84,11 +84,13 @@ class SimulatedAnnealing {
 	}
 
 	start(count){
+		//Starts SA
+		this.best_cost = getCost(); // calculate the cost of the path and set as initial best_cost
 		//loops around count times  to find optimum path
 	}
 
-	getCost(path){
-		//return cost of a path
+	getCost(){
+		//Returns the cost of the current path
 		var cost = 0;
 
 		for (var i=0; i<this.cities.length-1; i++){
@@ -100,6 +102,16 @@ class SimulatedAnnealing {
 		console.log("cost between (", this.cities[this.cities.length-1].x , this.cities[this.cities.length-1].y, ") and (", this.cities[0].x , this.cities[0].y, ") is : ", getDistance(this.cities[this.cities.length-1], this.cities[0]));
 
 		return cost;
+	}
+
+	acceptanceProbability(old_cost, new_cost, curr_temp){
+		//Returns a number between 0 and 1, using this we can decide whether or not
+		//to jump to a new solution
+
+		if (new_cost < old_cost){
+			return 1;
+		}
+		return Math.exp((old_cost - new_cost)/curr_temp);
 	}
 }
 
