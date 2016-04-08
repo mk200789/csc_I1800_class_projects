@@ -7,7 +7,7 @@ $(document).ready(function(){
 	document.getElementById("cityname").innerHTML = city.name;
 
 	draw_grid();
-	city.randomPopulate();
+	//city.randomPopulate();
 	city.drawCity();
 
 	var testtsa = new SimulatedAnnealing(0.1, 0.99, 0.001, city.city_list);
@@ -22,9 +22,10 @@ class City {
 		this.x = x_coord;
 		this.y = y_coord;
 
-		this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name}];
-		/*
-		this.city_list = [{'x': 407, 'y': 121, 'name': ""},
+		//this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name}];
+		
+		this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name},
+						  {'x': 407, 'y': 121, 'name': ""},
 						  {'x': 412, 'y': 200, 'name': ""},
 						  {'x': 198, 'y': 481, 'name': ""},
 						  {'x': 143, 'y': 196, 'name': ""},
@@ -34,7 +35,7 @@ class City {
 						  {'x': 367, 'y': 173, 'name': ""},
 						  {'x': 385, 'y': 376, 'name': ""},
 						  {'x': 125, 'y': 272, 'name': ""}];
-		*/
+		
 		console.log("City instantiated!");
 	}
 
@@ -91,8 +92,14 @@ class SimulatedAnnealing {
 		var cost = 0;
 
 		for (var i=0; i<this.cities.length-1; i++){
-			console.log(getDistance(this.cities[i], this.cities[i+1]));
+			cost += getDistance(this.cities[i], this.cities[i+1]);
+			console.log("cost between (", this.cities[i].x , this.cities[i].y, ") and (", this.cities[i+1].x , this.cities[i+1].y, ") is : ", getDistance(this.cities[i], this.cities[i+1]));
 		}
+
+		cost += getDistance(this.cities[0], this.cities[this.cities.length-1]);
+		console.log("cost between (", this.cities[this.cities.length-1].x , this.cities[this.cities.length-1].y, ") and (", this.cities[0].x , this.cities[0].y, ") is : ", getDistance(this.cities[this.cities.length-1], this.cities[0]));
+
+		return cost;
 	}
 }
 
