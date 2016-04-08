@@ -90,7 +90,9 @@ class SimulatedAnnealing {
 		//return cost of a path
 		var cost = 0;
 
-		console.log(this.cities.length);
+		for (var i=0; i<this.cities.length-1; i++){
+			console.log(getDistance(this.cities[i], this.cities[i+1]));
+		}
 	}
 }
 
@@ -128,7 +130,7 @@ function draw_grid(){
 
 //Returns the distance between two points
 function getDistance(p1, p2){
-	return Math.sqrt((p1[0]-p2[0])*(p1[0]-p2[0]) + (p1[0]-p2[0])*(p1[1]-p2[1]));
+	return Math.sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y));
 }
 
 
