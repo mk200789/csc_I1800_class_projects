@@ -10,8 +10,8 @@ $(document).ready(function(){
 	//city.randomPopulate();
 	city.drawCity();
 
-	var testtsa = new SimulatedAnnealing(0.1, 0.99, 0.001, city.city_list);
-	testtsa.getCost();
+	var testtsa = new SimulatedAnnealing(1.0, 0.99, city.city_list);
+	testtsa.start(3);
 });
 
 
@@ -73,10 +73,9 @@ class City {
 }
 
 class SimulatedAnnealing {
-	constructor(temp, cooling, freezing, cities){
-		this.temperature = temp;
+	constructor(temp, cooling, cities){
+		this.temperature = temp; //initial temperature
 		this.cooling = cooling;
-		this.freezing = freezing;
 		this.best_cost = 0; //keeps track of the best cost
 		this.best = cities; //set current cities to best
 		this.cities = cities;
@@ -85,8 +84,18 @@ class SimulatedAnnealing {
 
 	start(count){
 		//Starts SA
-		this.best_cost = getCost(); // calculate the cost of the path and set as initial best_cost
+		this.best_cost = this.getCost(); // calculate the cost of the path and set as initial best_cost
 		//loops around count times  to find optimum path
+
+		while (this.temperature > 0.00001){
+			var i = count;
+			while (i > 0){
+				console.log("hi");
+				i--;
+				
+			}
+			this.temperature *= this.cooling; //linear cooling
+		}
 	}
 
 	getCost(){
