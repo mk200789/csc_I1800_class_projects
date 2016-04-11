@@ -86,7 +86,7 @@ class SimulatedAnnealing {
 		//Starts SA
 		this.best_cost = this.getCost(); // calculate the cost of the path and set as initial best_cost
 		//loops around count times  to find optimum path
-
+		/*
 		while (this.temperature > 0.00001){
 			var i = count;
 			while (i > 0){
@@ -96,6 +96,12 @@ class SimulatedAnnealing {
 			}
 			this.temperature *= this.cooling; //linear cooling
 		}
+		*/
+	}
+
+	neighbor(){
+		//Generates and return a random neighboring solution
+		var temp = [];
 	}
 
 	getCost(){
