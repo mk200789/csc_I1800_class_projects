@@ -99,9 +99,13 @@ class SimulatedAnnealing {
 		*/
 	}
 
-	neighbor(){
+	neighbor(i, j){
 		//Generates and return a random neighboring solution
 		var temp = [];
+		while(i != j){
+			i = (i+1) % this.cities.length;
+			j = (j-1 + this.cities.length) % this.cities.length;
+		}
 	}
 
 	getCost(){
