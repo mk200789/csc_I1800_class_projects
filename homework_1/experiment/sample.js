@@ -77,19 +77,25 @@ class SimulatedAnnealing {
 		this.temperature = temp; //initial temperature
 		this.cooling = cooling;
 		this.best_cost = 0; //keeps track of the best cost
+		this.best_solution = [];
 		this.best = cities; //set current cities to best
 		this.cities = cities;
-		this.best_cost = 0;
 	}
 
 	start(count){
 		//Starts SA
-		this.best_cost = this.getCost(); // calculate the cost of the path and set as initial best_cost
 		//loops around count times  to find optimum path
 		/*
 		while (this.temperature > 0.00001){
 			var i = count;
 			while (i > 0){
+				var new_solution = this.neighbor(this.cities);
+				var new_cost = this.getCost(new_solution);
+				var ap = this.acceptanceProbability(this.old_cost);
+				if (ap > Math.random()){
+					this.best_solution = new_solution;
+					this.best_cost = new_cost;
+				}
 				console.log("hi");
 				i--;
 				
@@ -108,17 +114,17 @@ class SimulatedAnnealing {
 		}
 	}
 
-	getCost(){
+	getCost(cities){
 		//Returns the cost of the current path
 		var cost = 0;
 
-		for (var i=0; i<this.cities.length-1; i++){
-			cost += getDistance(this.cities[i], this.cities[i+1]);
-			console.log("cost between (", this.cities[i].x , this.cities[i].y, ") and (", this.cities[i+1].x , this.cities[i+1].y, ") is : ", getDistance(this.cities[i], this.cities[i+1]));
+		for (var i=0; i<cities.length-1; i++){
+			cost += getDistance(cities[i], cities[i+1]);
+			console.log("cost between (", cities[i].x , cities[i].y, ") and (", cities[i+1].x , cities[i+1].y, ") is : ", getDistance(cities[i], cities[i+1]));
 		}
 
-		cost += getDistance(this.cities[0], this.cities[this.cities.length-1]);
-		console.log("cost between (", this.cities[this.cities.length-1].x , this.cities[this.cities.length-1].y, ") and (", this.cities[0].x , this.cities[0].y, ") is : ", getDistance(this.cities[this.cities.length-1], this.cities[0]));
+		cost += getDistance(cities[0], cities[cities.length-1]);
+		console.log("cost between (", cities[cities.length-1].x , cities[cities.length-1].y, ") and (", cities[0].x , cities[0].y, ") is : ", getDistance(cities[cities.length-1], cities[0]));
 
 		return cost;
 	}
