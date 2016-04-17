@@ -83,10 +83,9 @@ class SimulatedAnnealing {
 	}
 
 	start(count){
-		this.neighbor(this.cities);
 		//Starts SA
 		//loops around count times  to find optimum path
-		/*
+		
 		while (this.temperature > 0.00001){
 			var i = count;
 			while (i > 0){
@@ -103,13 +102,14 @@ class SimulatedAnnealing {
 			}
 			this.temperature *= this.cooling; //linear cooling
 		}
-		*/
+		
+		
 	}
 
 	neighbor(cities){
 		//Generates and return a random neighboring solution
 
-		var new_route = jQuery.extend(true, {}, cities);
+		var new_route = jQuery.extend([], cities);
 		var city1 = 0;
 		var city2 = 0;
 
@@ -139,6 +139,7 @@ class SimulatedAnnealing {
 		console.log("cost between (", cities[cities.length-1].x , cities[cities.length-1].y, ") and (", cities[0].x , cities[0].y, ") is : ", getDistance(cities[cities.length-1], cities[0]));
 
 		return cost;
+
 	}
 
 	acceptanceProbability(old_cost, new_cost, curr_temp){
