@@ -83,6 +83,7 @@ class SimulatedAnnealing {
 	}
 
 	start(count){
+		this.neighbor(this.cities);
 		//Starts SA
 		//loops around count times  to find optimum path
 		/*
@@ -105,9 +106,24 @@ class SimulatedAnnealing {
 		*/
 	}
 
-	neighbor(i, j){
+	neighbor(cities){
 		//Generates and return a random neighboring solution
 
+		var new_route = jQuery.extend(true, {}, cities);
+		var city1 = 0;
+		var city2 = 0;
+
+		//randomly select two different cities
+		while (city1 == city2){
+			city1 = getRandomInt(0, cities.length-1);
+			city2 = getRandomInt(0, cities.length-1);
+		}
+
+		//swap the two cities
+		new_route[city2] = new_route[city1];
+		new_route[city1] = cities[city2];
+
+		return new_route;
 	}
 
 	getCost(cities){
