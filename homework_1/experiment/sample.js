@@ -7,11 +7,12 @@ $(document).ready(function(){
 	document.getElementById("cityname").innerHTML = city.name;
 
 	draw_grid();
-	//city.randomPopulate();
+	city.randomPopulate();
 	city.drawCity();
 
-	var testtsa = new SimulatedAnnealing(1.0, 0.99, city.city_list);
-	testtsa.start(3);
+	//var testtsa = new SimulatedAnnealing(1.0, 0.99, city.city_list);
+	var testtsa = new SimulatedAnnealing(0.1, 0.99, city.city_list);
+	testtsa.start(10);
 });
 
 
@@ -22,8 +23,9 @@ class City {
 		this.x = x_coord;
 		this.y = y_coord;
 
-		//this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name}];
+		this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name}];
 		
+		/*
 		this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name},
 						  {'x': 407, 'y': 121, 'name': ""},
 						  {'x': 412, 'y': 200, 'name': ""},
@@ -35,6 +37,7 @@ class City {
 						  {'x': 367, 'y': 173, 'name': ""},
 						  {'x': 385, 'y': 376, 'name': ""},
 						  {'x': 125, 'y': 272, 'name': ""}];
+		*/
 		
 		console.log("City instantiated!");
 	}
@@ -76,8 +79,8 @@ class SimulatedAnnealing {
 	constructor(temp, cooling, cities){
 		this.temperature = temp; //initial temperature
 		this.cooling = cooling;
-		this.best_cost = 0; //keeps track of the best cost
-		this.best_solution = [];
+		this.best_solution = cities; //keeps track of current path/route
+		this.best_cost = this.getCost(this.best_solution); //keeps track of the best cost
 		this.best = cities; //set current cities to best
 		this.cities = cities;
 	}
@@ -85,25 +88,29 @@ class SimulatedAnnealing {
 	start(count){
 		//Starts SA
 		//loops around count times  to find optimum path
-		
-		while (this.temperature > 0.00001){
+
+		while (this.temperature > 1e-4){//0.00001){
 			var i = count;
 			while (i > 0){
 				var new_solution = this.neighbor(this.cities);
 				var new_cost = this.getCost(new_solution);
-				var ap = this.acceptanceProbability(this.old_cost);
-				if (ap > Math.random()){
+				//var ap = this.acceptanceProbability(this.old_cost);
+				var ap = this.acceptanceProbability(this.best_cost, new_cost, this.temperature);
+				var rand = Math.random();
+
+				if (ap > rand){
 					this.best_solution = new_solution;
 					this.best_cost = new_cost;
+					console.log(new_solution, new_cost);
 				}
-				console.log("hi");
 				i--;
 				
 			}
-			this.temperature *= this.cooling; //linear cooling
+
+			this.temperature = this.temperature * this.cooling; //linear cooling
 		}
 		
-		
+		console.log(this.best_solution, this.best_cost);
 	}
 
 	neighbor(cities){
@@ -132,11 +139,11 @@ class SimulatedAnnealing {
 
 		for (var i=0; i<cities.length-1; i++){
 			cost += getDistance(cities[i], cities[i+1]);
-			console.log("cost between (", cities[i].x , cities[i].y, ") and (", cities[i+1].x , cities[i+1].y, ") is : ", getDistance(cities[i], cities[i+1]));
+			//console.log("cost between (", cities[i].x , cities[i].y, ") and (", cities[i+1].x , cities[i+1].y, ") is : ", getDistance(cities[i], cities[i+1]));
 		}
 
 		cost += getDistance(cities[0], cities[cities.length-1]);
-		console.log("cost between (", cities[cities.length-1].x , cities[cities.length-1].y, ") and (", cities[0].x , cities[0].y, ") is : ", getDistance(cities[cities.length-1], cities[0]));
+		//console.log("cost between (", cities[cities.length-1].x , cities[cities.length-1].y, ") and (", cities[0].x , cities[0].y, ") is : ", getDistance(cities[cities.length-1], cities[0]));
 
 		return cost;
 
@@ -145,11 +152,11 @@ class SimulatedAnnealing {
 	acceptanceProbability(old_cost, new_cost, curr_temp){
 		//Returns a number between 0 and 1, using this we can decide whether or not
 		//to jump to a new solution
-
 		if (new_cost < old_cost){
 			return 1;
 		}
-		return Math.exp((old_cost - new_cost)/curr_temp);
+		var h = Math.exp((old_cost - new_cost)/curr_temp);
+		return h;
 	}
 }
 
