@@ -12,7 +12,7 @@ $(document).ready(function(){
 
 	//var testtsa = new SimulatedAnnealing(1.0, 0.99, city.city_list);
 	var testtsa = new SimulatedAnnealing(0.1, 0.99, city.city_list);
-	testtsa.start(10);
+	testtsa.start(6);
 });
 
 
@@ -157,6 +157,10 @@ class SimulatedAnnealing {
 		}
 		var h = Math.exp((old_cost - new_cost)/curr_temp);
 		return h;
+	}
+
+	refreshGrid(){
+		//Refresh grid with current path
 	}
 }
 
