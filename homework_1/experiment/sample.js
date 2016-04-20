@@ -11,8 +11,9 @@ $(document).ready(function(){
 	city.drawCity();
 
 	//var testtsa = new SimulatedAnnealing(1.0, 0.99, city.city_list);
-	var testtsa = new SimulatedAnnealing(0.1, 0.99, city.city_list);
-	testtsa.start(6);
+	var testtsa = new SimulatedAnnealing(1000, 0.99, city.city_list);
+	//testtsa.start(5);
+	testtsa.start();
 });
 
 
@@ -48,12 +49,12 @@ class City {
 	}
 
 	randomPopulate(){
-		//randomly populates 10 cities
+		//randomly populates 150 cities
 
-		for (var i=0; i<10; i++){
+		for (var i=0; i<150; i++){
 			this.addCity(getRandomInt(1, 490), getRandomInt(1, 490));
 		}
-		console.log("finish adding 10 random cities.");
+		console.log("finish adding 150 random cities.");
 	}
 
 	drawCity(){
@@ -88,7 +89,7 @@ class SimulatedAnnealing {
 	start(count){
 		//Starts SA
 		//loops around count times  to find optimum path
-
+/*
 		while (this.temperature > 1e-4){//0.00001){
 			var i = count;
 			while (i > 0){
@@ -109,6 +110,28 @@ class SimulatedAnnealing {
 
 			this.temperature = this.temperature * this.cooling; //linear cooling
 		}
+*/
+			
+
+			while (this.temperature > 1e-4){
+				var new_solution = this.neighbor(this.cities);
+				var new_cost = this.getCost(new_solution);
+				//var ap = this.acceptanceProbability(this.old_cost);
+				var ap = this.acceptanceProbability(this.best_cost, new_cost, this.temperature);
+				var rand = Math.random();
+
+				if (ap > rand){
+					this.best_solution = new_solution;
+					this.best_cost = new_cost;
+					console.log(new_solution, new_cost);
+				}
+
+				this.temperature = this.temperature * this.cooling; //linear cooling
+				
+			}
+
+			
+		
 		
 		console.log(this.best_solution, this.best_cost);
 	}
