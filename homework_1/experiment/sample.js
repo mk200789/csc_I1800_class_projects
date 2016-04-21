@@ -13,7 +13,9 @@ $(document).ready(function(){
 	//var testtsa = new SimulatedAnnealing(1.0, 0.99, city.city_list);
 	var testtsa = new SimulatedAnnealing(1000, 0.99, city.city_list);
 	//testtsa.start(5);
+	testtsa.initialRoute();
 	testtsa.start();
+
 });
 
 
@@ -84,6 +86,7 @@ class SimulatedAnnealing {
 		this.best_cost = this.getCost(this.best_solution); //keeps track of the best cost
 		this.best = cities; //set current cities to best
 		this.cities = cities;
+
 	}
 
 	start(count){
@@ -184,6 +187,12 @@ class SimulatedAnnealing {
 
 	refreshGrid(){
 		//Refresh grid with current path
+	}
+	
+	initialRoute(){
+		for (var i = 0; i<this.cities.length-1; i++){
+			console.log(i);
+		}
 	}
 }
 
