@@ -10,12 +10,24 @@ $(document).ready(function(){
 	//city.randomPopulate();
 	city.drawCity();
 
-	//var testtsa = new SimulatedAnnealing(1.0, 0.99, city.city_list);
-	var testtsa = new SimulatedAnnealing(1000, 0.99, city.city_list);
-	//testtsa.start(5);
-	testtsa.initialRoute();
-	testtsa.start();
-	//testtsa.refreshGrid();
+	var testtsa = new SimulatedAnnealing(100, 0.99, city.city_list);
+
+	document.getElementById("start_path").onclick = function(){
+		console.log("YOU CLICKED ME");
+		setTimeout(function(){
+			testtsa.initialRoute();
+			console.log("A");
+			setB();
+		}, 500);
+		
+
+	}
+
+
+	function setB (){
+		testtsa.start();
+		console.log("B");
+	}
 
 });
 
@@ -30,6 +42,7 @@ class City {
 		//this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name}];
 		
 		//151 cities hard coded
+		/*
 		this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name},
 						  {'x': 325, 'y': 298, 'name': ""},
 						  {'x': 231, 'y': 110, 'name': ""},
@@ -181,7 +194,25 @@ class City {
 						  {'x': 447, 'y': 235, 'name': ""},
 						  {'x': 80,  'y': 2, 'name': ""},
 						  {'x': 185, 'y': 327, 'name': ""}
-						  ];
+						  ]; */
+
+
+		this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name},
+						  {'x': 325, 'y': 298, 'name': ""},
+						  {'x': 231, 'y': 110, 'name': ""},
+						  {'x': 485, 'y': 226, 'name': ""},
+						  {'x': 176, 'y': 424, 'name': ""},
+						  {'x': 95,  'y': 98, 'name': ""},
+						  {'x': 477, 'y': 361, 'name': ""},
+						  {'x': 490, 'y': 120,  'name': ""},
+						  {'x': 397, 'y': 414, 'name': ""},
+						  {'x': 408, 'y': 73, 'name': ""},
+						  {'x': 439, 'y': 218, 'name': ""},
+						  {'x': 33,  'y': 269, 'name': ""},
+						  {'x': 355, 'y': 442, 'name': ""},
+						  {'x': 128, 'y': 315, 'name': ""},
+						  {'x': 334, 'y': 57, 'name': ""},
+						  {'x': 75,  'y': 226, 'name': ""}];
 		console.log("City instantiated!");
 	}
 
@@ -226,47 +257,80 @@ class SimulatedAnnealing {
 		this.best_cost = this.getCost(this.best_solution); //keeps track of the best cost
 		this.best = cities; //set current cities to best
 		this.cities = cities;
+		this.original = cities;
+
+
+		this.current = cities;
 
 	}
 
-	start(count){
+	start(){
 		//Starts SA	
-			while (this.temperature > 1e-4){
-				var new_solution = this.neighbor(this.cities);
-				var new_cost = this.getCost(new_solution);
-				//var ap = this.acceptanceProbability(this.old_cost);
-				var ap = this.acceptanceProbability(this.best_cost, new_cost, this.temperature);
-				var rand = Math.random();
+		var p = this.isSame(this.original, this.best_solution);
+		console.log(p);
 
-				if (ap > rand){
-					this.best_solution = new_solution;
-					this.best_cost = new_cost;
-					console.log(new_solution, new_cost);
-				}
 
-				this.temperature = this.temperature * this.cooling; //linear cooling
-				
+		if (this.temperature > 1e-4){
+
+			console.log(this.temperature);
+			
+			var current_cost = this.getCost(this.current);
+
+			//var new_solution = this.neighbor(this.cities);
+			var new_solution = this.neighbor(this.current);
+
+			var new_cost = this.getCost(new_solution);
+			
+			//var ap = this.acceptanceProbability(this.best_cost, new_cost, this.temperature);
+			var ap = this.acceptanceProbability(current_cost, new_cost, this.temperature);
+			var rand = Math.random();
+
+			if (ap > rand){
+
+				this.current = jQuery.extend([], new_solution);
+				current_cost = this.getCost(this.current);
 			}
 
-		console.log(this.best_solution, this.best_cost);
+							if (current_cost < this.best_cost){
+					this.best_solution = jQuery.extend([], this.current);
+					this.best_cost = current_cost;
+					this.redraw();
+				}
+
+			this.temperature = this.temperature * this.cooling; //linear cooling
+			
+		}
+
+		console.log("best cost: ", this.best_cost);
+		if (this.temperature > 1e-4){
+			window.setTimeout(this.start.bind(this), 10);
+		}
 	}
 
 	neighbor(cities){
 		//Generates and return a random neighboring solution
 
 		var new_route = jQuery.extend([], cities);
-		var city1 = 0;
-		var city2 = 0;
+
+		var city1 = getRandomInt(0, cities.length-1);
+		var city2 = (city1 + 1 + getRandomInt(0, cities.length-2))% cities.length;
 
 		//randomly select two different cities
-		while (city1 == city2){
-			city1 = getRandomInt(0, cities.length-1);
-			city2 = getRandomInt(0, cities.length-1);
+		while (city1 != city2){
+
+			//swap the two cities
+			var temp = new_route[city2];
+			new_route[city2] = new_route[city1];
+			new_route[city1] = temp;
+
+			city1 = (city1+1) %cities.length;
+			if (city1 == city2){
+				break;
+			}
+
+			city2 = (city2-1+cities.length)%cities.length;
 		}
 
-		//swap the two cities
-		new_route[city2] = new_route[city1];
-		new_route[city1] = cities[city2];
 
 		return new_route;
 	}
@@ -294,12 +358,63 @@ class SimulatedAnnealing {
 			return 1;
 		}
 		var h = Math.exp((old_cost - new_cost)/curr_temp);
+
 		return h;
 	}
 
-	refreshGrid(){
-		//Refresh grid with current path
+
+	redraw(){
+		var canvas = document.getElementById("grid");
+
+		var context = canvas.getContext("2d");
+
+		context.clearRect(0, 0, canvas.width, canvas.height);
+
+		draw_grid();
+
+		this.drawCity();
+
+		context.strokeStyle = "#ff99c2";
+		context.fillStyle = "#ff99c2";
+
+		context.beginPath();
+
+		for (var i = 0; i<this.best_solution.length-1; i++){
+			context.moveTo(this.best_solution[i].x, this.best_solution[i].y);
+			context.lineTo(this.best_solution[i+1].x, this.best_solution[i+1].y);
+		}
+		context.stroke();
+
+		context.beginPath();
+		context.strokeStyle = "green";
+		context.fillStyle = "green";
+
+		context.moveTo(this.best_solution[this.best_solution.length-1].x, this.best_solution[this.best_solution.length-1].y);
+		context.lineTo(this.best_solution[0].x, this.best_solution[0].y);
+
+		context.stroke();
 	}
+
+
+
+	drawCity(){
+		//plots the city on canvas
+		var canvas = document.getElementById("grid");
+
+		var context = canvas.getContext("2d");
+
+		context.strokeStyle = "red";
+		context.fillStyle = "red";
+
+		for (let city of this.best_solution) {
+			context.beginPath();
+			context.arc(city.x, city.y, 2, 0, 2 * Math.PI);
+			context.fill();
+			context.stroke();
+		}
+		
+	}
+
 	
 	initialRoute(){
 
@@ -315,11 +430,30 @@ class SimulatedAnnealing {
 		context.beginPath();
 
 		for (var i = 0; i<this.cities.length-1; i++){
-			
 			context.moveTo(this.cities[i].x, this.cities[i].y);
 			context.lineTo(this.cities[i+1].x, this.cities[i+1].y);
 		}
+
+		context.moveTo(this.cities[this.cities.length-1].x, this.cities[this.cities.length-1].y);
+		context.lineTo(this.cities[0].x, this.cities[0].y);
+
 		context.stroke();
+	}
+
+	isSame(originalArray, newArray){
+		var isSame = true;
+
+		for (var i = 0; i<originalArray.length; i++){
+			if (originalArray[i].x != newArray[i].x && originalArray[i].y != newArray[i].y){
+				isSame = false;
+			}
+		}
+
+		if (isSame){
+			return true;
+		}
+
+		return false;
 	}
 }
 
@@ -351,7 +485,7 @@ function draw_grid(){
 			}
 		}
 	}
-	context.strokeStyle = "green";
+	context.strokeStyle = "#e0e0eb";
 	context.stroke();
 }
 
