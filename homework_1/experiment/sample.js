@@ -10,7 +10,11 @@ $(document).ready(function(){
 	//city.randomPopulate();
 	city.drawCity();
 
-	var testtsa = new SimulatedAnnealing(100, 0.99, city.city_list);
+	var testtsa = new SimulatedAnnealing(1000, 0.9999, city.city_list);
+
+	document.getElementById("temperature").value = 10000;
+	document.getElementById("cool_rate").value = 0.9999;
+	document.getElementById("total_cities").value = 151;
 
 	document.getElementById("start_path").onclick = function(){
 		console.log("YOU CLICKED ME");
@@ -42,7 +46,7 @@ class City {
 		//this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name}];
 		
 		//151 cities hard coded
-		/*
+		
 		this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name},
 						  {'x': 325, 'y': 298, 'name': ""},
 						  {'x': 231, 'y': 110, 'name': ""},
@@ -194,10 +198,10 @@ class City {
 						  {'x': 447, 'y': 235, 'name': ""},
 						  {'x': 80,  'y': 2, 'name': ""},
 						  {'x': 185, 'y': 327, 'name': ""}
-						  ]; */
+						  ]; 
 
 
-		this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name},
+		/*this.city_list = [{'x': this.x, 'y': this.y, 'name': this.name},
 						  {'x': 325, 'y': 298, 'name': ""},
 						  {'x': 231, 'y': 110, 'name': ""},
 						  {'x': 485, 'y': 226, 'name': ""},
@@ -212,7 +216,7 @@ class City {
 						  {'x': 355, 'y': 442, 'name': ""},
 						  {'x': 128, 'y': 315, 'name': ""},
 						  {'x': 334, 'y': 57, 'name': ""},
-						  {'x': 75,  'y': 226, 'name': ""}];
+						  {'x': 75,  'y': 226, 'name': ""}];*/
 		console.log("City instantiated!");
 	}
 
