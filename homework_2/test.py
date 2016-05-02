@@ -1,35 +1,51 @@
-from numpy import dot, array
+from numpy import dot, array, random
 
-a = [[1, 0], [0, 1]]
-b = [[4, 1], [2, 2]]
+#AND function 
+# x1 | x2 | f(x1, x2)
+#----|----|-----------
+# -1 | -1 | -1
+# -1 |  1 | -1
+# 1  | -1 | -1
+# 1  |  1 | 1
 
-result = dot(a,b)
+#activation function: step function
+output = lambda y: -1 if y < 0 else 1
 
-print result
+#initialize weights randomly
+weight = random.random(3)
+
+#set learning rate alpha to 1 for simplicity
+alpha = 1
+
+#[[bipolar inputs, bias], bipolar target]
+training_pattern = [
+					(array([-1, -1, 1]), -1),
+					(array([-1,  1, 1]), -1),
+					(array([ 1, -1, 1]), -1),
+					(array([ 1,  1, 1]),  1)
+				   ]
+
+#number of iterations it take for no weight changes
+iterations = 0
+
+while (1):
+	#count total errors
+	error_count = 0
+
+	iterations += 1
+
+	for i, target in training_pattern:
+		xw = dot(i, weight)
+		y_in = output(xw)
 
 
-#[1 0] [4 1]
-#[0 1] [2 2]
+		if target - y_in != 0:
+			#update weights
+			weight = weight + alpha*(target-y_in) * i
+			error_count += 1
+			print "weight: ",weight
+		
+	if error_count == 0:
+		break
 
-# dot product:
-# [a b] [e f]
-# [c d] [g h]
-
-# [a*e + b*g		a*f + a*h]
-# [c*e + d*g		c*f + c*h]
-
-
-w = 1*4 + 0*2	
-x = 1*1 + 0*2
-y = 0*4 + 1*2
-z = 0*1 + 1*2
-
-print w, x
-print y, z 
-
-
-pattern1 = [array([1, -1, -1, -1, 1]),
-			array([-1, 1, -1, 1, -1])]
-
-print pattern1
-
+print "# iterations: ", iterations
