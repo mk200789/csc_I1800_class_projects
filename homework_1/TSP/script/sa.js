@@ -1,3 +1,5 @@
+var timeBegin;
+var timeEnd;
 $(document).ready(function(){
 	//instantiate a new city taking in city, x, and y value
 	var city = new City(100, 100);
@@ -18,15 +20,9 @@ $(document).ready(function(){
 
 	document.getElementById("start_path").onclick = function(){
 
-		/*
-		setTimeout(function(){
-			sa.initialRoute();
-			console.log("A");
-			setB();
-		}, 500);
-		*/
 		console.log("start!");
 		console.time('Total time');
+		timeBegin = performance.now();
 		sa.start();
 		
 
@@ -294,9 +290,10 @@ class SimulatedAnnealing {
 		else{
 			console.log("Initial cost: ", this.initial_distance);
 			console.log("Best cost: ", this.best_cost);
+			timeEnd = performance.now();
 			console.timeEnd('Total time');
-			
-			//document.getElementById("total_time").value = 150;
+			console.log(timeEnd-timeBegin);
+			document.getElementById("total_time").value = ((timeEnd-timeBegin)*0.001).toFixed(2) + " seconds";
 		}
 	}
 
