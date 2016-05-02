@@ -3,7 +3,41 @@
 	<head>
 		<title>Multiple TSP</title>
 		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<script type="text/javascript" src="script/jquery.min.js"></script>
+		<script src="script/sa.js"></script>
 	</head>
 	<body>
+
+		<h1>Welcome to <span id = "cityname">Traveling Salesman Problem</span> for 100 cities!</h1>
+		<div class = "start_button">
+			<input type="button" value="START!" id="start_path">
+		</div>
+
+		<div class ="grid_container">
+			<canvas id = "grid" width="500" height="500"></canvas>
+		</div>
+
+		<div class ="specs">
+			<table>
+				<th>Specs</th>
+				<tbody>
+					<tr>
+						<td>Temperature</td><td><input type="text" name="temperature" id="temperature" value=""></td>
+					</tr>
+					<tr>
+						<td>Cooling Rate</td><td><input type="text" name="cool_rate" id="cool_rate" value=""></td>
+					</tr>
+					<tr>
+						<td># Cities</td><td><input type="text" name="total_cities" id="total_cities" value=""></td>
+					</tr>
+					<tr>
+						<td>Total time run</td><td><input type="text" name="total_time" id="total_time" value=""></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+
 	</body>
 </html>
