@@ -1,0 +1,21 @@
+body{
+	margin: 50px;
+}
+
+.start_button{
+	margin: 10px;
+}
+
+.grid_container{
+	float: left;
+	width: 550px;
+}
+
+
+#cityname{
+	color: #CB4D8C;
+}
+
+.specs{
+	float: right;
+}
