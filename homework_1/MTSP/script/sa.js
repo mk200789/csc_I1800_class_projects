@@ -15,26 +15,19 @@ $(document).ready(function(){
 	document.getElementById("total_cities").value = 50;
 
 
-	sa.drawCity();
+	sa.drawInitialCity();
 	//sa.initialRoute();
 	
 	sa.k_means();
-	//sa.initializeSalesmen();
 
 	document.getElementById("start_path").onclick = function(){
 
 		console.log("start!");
-		console.time('Total time');
-		timeBegin = performance.now();
+		//console.time('Total time');
+		//timeBegin = performance.now();
 		sa.start();
 		
 
-	}
-
-
-	function setB (){
-		sa.start();
-		console.log("B");
 	}
 
 });
@@ -261,22 +254,53 @@ class City {
 class SimulatedAnnealing {
 	constructor(temp, cooling, cities){
 		this.temperature = temp; //initial temperature
+		this.original_temp = temp;
 		this.cooling = cooling;
+
+
 		this.best_solution = cities; //keeps track of current path/route
-		this.best_cost = this.getCost(this.best_solution); //keeps track of the best cost
+
+		//this.best_cost = this.getCost(this.best_solution); //keeps track of the best cost
+		this.best_cost = [];
+
 		this.best = cities; //set current cities to best
 		this.cities = cities;
-		this.initial_distance = 0;
+
+		//this.initial_distance = 0;
+		this.initial_distance = [];
 
 		this.current = cities;
 
+		this.centroids = [];
+		this.clusters  = [];
+
 	}
 
-	initializeSalesmen(){
-
-	}
 
 	start(){
+		this.best_solution = this.clusters;
+
+		for (var center=0; center <this.centroids.length; center++){
+			this.initial_distance[center] = this.getCost(this.clusters[center]);
+		}
+
+		this.best_cost = jQuery.extend([], this.initial_distance);
+		
+		for (var center=0; center <this.centroids.length; center++){
+			console.log(this.clusters[center], this.clusters[center].length);
+			console.log("NEXT!");
+
+			this.temperature = this.original_temp;
+			this.current = this.clusters[center];
+			this.anneal(center);
+		}
+
+		console.log("STOPE!");
+
+		//this.anneal();
+	}
+
+	anneal(center){
 		//Starts SA	
 
 		if (this.temperature > 1e-4){
@@ -300,28 +324,29 @@ class SimulatedAnnealing {
 				current_cost = this.getCost(this.current);
 			}
 
-			if (current_cost < this.best_cost){
-					this.best_solution = jQuery.extend([], this.current);
-					this.best_cost = current_cost;
-					this.redraw();
+			if (current_cost < this.best_cost[center]){
+					this.best_solution[center] = jQuery.extend([], this.current);
+					this.best_cost[center] = current_cost;
+					//this.redraw();
 			}
-			
 
 			this.temperature = this.temperature * this.cooling; //linear cooling
 			
 		}
-
-		console.log("best cost: ", this.best_cost);
+		console.log(this.best_cost);
+		console.log("best cost: ", this.best_cost[center]);
 		if (this.temperature > 1e-4){
-			window.setTimeout(this.start.bind(this), 10);
+			//window.setTimeout(this.anneal().bind(this), 10);
+			window.setTimeout(this.anneal(center), 10);
 		}
 		else{
-			console.log("Initial cost: ", this.initial_distance);
-			console.log("Best cost: ", this.best_cost);
-			timeEnd = performance.now();
-			console.timeEnd('Total time');
-			console.log(timeEnd-timeBegin);
-			document.getElementById("total_time").value = ((timeEnd-timeBegin)*0.001).toFixed(2) + " seconds";
+			console.log("Initial cost: ", this.initial_distance[center]);
+			console.log("Best cost: ", this.best_cost[center]);
+			this.redraw();
+			//timeEnd = performance.now();
+			//console.timeEnd('Total time');
+			//console.log(timeEnd-timeBegin);
+			//document.getElementById("total_time").value = ((timeEnd-timeBegin)*0.001).toFixed(2) + " seconds";
 		}
 	}
 
@@ -382,6 +407,9 @@ class SimulatedAnnealing {
 
 
 	redraw(){
+
+		console.log("redraw()");
+
 		var canvas = document.getElementById("grid");
 
 		var context = canvas.getContext("2d");
@@ -392,30 +420,46 @@ class SimulatedAnnealing {
 
 		this.drawCity();
 
-		context.strokeStyle = "#ff99c2";
-		context.fillStyle = "#ff99c2";
+		for (let cluster of this.best_solution){
+			context.strokeStyle = "#ff99c2";
+			//context.fillStyle = "#ff99c2";
+			context.beginPath();
 
-		context.beginPath();
+			for (var i=0; i <cluster.length-1; i++){
+				console.log("party!");
+				context.moveTo(cluster[i].x, cluster[i].y);
+				context.lineTo(cluster[i+1].x, cluster[i+1].y);
+			}
+			context.stroke();
 
-		for (var i = 0; i<this.best_solution.length-1; i++){
-			context.moveTo(this.best_solution[i].x, this.best_solution[i].y);
-			context.lineTo(this.best_solution[i+1].x, this.best_solution[i+1].y);
+			context.beginPath();
+			context.strokeStyle = "green";
+			//context.fillStyle = "green";
+
+			context.moveTo(cluster[cluster.length-1].x, cluster[cluster.length-1].y);
+			context.lineTo(cluster[0].x, cluster[0].y);
+			context.stroke();
 		}
-		context.stroke();
 
-		context.beginPath();
-		context.strokeStyle = "green";
-		context.fillStyle = "green";
 
-		context.moveTo(this.best_solution[this.best_solution.length-1].x, this.best_solution[this.best_solution.length-1].y);
-		context.lineTo(this.best_solution[0].x, this.best_solution[0].y);
+		context.strokeStyle = "#ff80ff";
+		context.fillStyle = "#ff80ff";
 
-		context.stroke();
+		for (let p of this.centroids) {
+			context.beginPath();
+			context.arc(p.x, p.y, 2, 0, 2 * Math.PI);
+			context.fill();
+			context.stroke();
+		}
+
+
 	}
 
 
 
 	drawCity(){
+
+		console.log("drawCity()");
 		//plots the city on canvas
 		var canvas = document.getElementById("grid");
 
@@ -424,9 +468,32 @@ class SimulatedAnnealing {
 		context.strokeStyle = "red";
 		context.fillStyle = "red";
 
-		for (let city of this.best_solution) {
+		for (let cluster of this.best_solution){
+			for (let city of cluster){
+				//console.log("C: ", city, cluster);
+				context.beginPath();
+				context.arc(city.x, city.y, 2, 0, 2 * Math.PI);
+				context.fill();
+				context.stroke();
+			}
+		}
+		
+	}
+
+	drawInitialCity(){
+		console.log("drawCity()");
+		//plots the city on canvas
+		var canvas = document.getElementById("grid");
+
+		var context = canvas.getContext("2d");
+
+		context.strokeStyle = "red";
+		context.fillStyle = "red";
+
+
+		for (let cluster of this.best_solution){
 			context.beginPath();
-			context.arc(city.x, city.y, 2, 0, 2 * Math.PI);
+			context.arc(cluster.x, cluster.y, 2, 0, 2 * Math.PI);
 			context.fill();
 			context.stroke();
 		}
@@ -434,32 +501,6 @@ class SimulatedAnnealing {
 	}
 
 	
-	initialRoute(){
-
-		console.log(this.cities);
-
-		this.initial_distance = this.getCost(this.cities);
-
-		var canvas = document.getElementById("grid");
-
-		var context = canvas.getContext("2d");
-
-		context.strokeStyle = "blue";
-		context.fillStyle = "blue";
-
-		context.beginPath();
-
-		for (var i = 0; i<this.cities.length-1; i++){
-			context.moveTo(this.cities[i].x, this.cities[i].y);
-			context.lineTo(this.cities[i+1].x, this.cities[i+1].y);
-		}
-
-		context.moveTo(this.cities[this.cities.length-1].x, this.cities[this.cities.length-1].y);
-		context.lineTo(this.cities[0].x, this.cities[0].y);
-
-		context.stroke();
-	}
-
 	k_means(){
 		var n = jQuery.extend([], this.cities);
 		var k = 5;
@@ -474,12 +515,9 @@ class SimulatedAnnealing {
 
 		var clusters = [];
 
-		var count = 0;
-		//while (count < 1){
 		while (1){
 			//reset clusters
 			clusters = [];
-			count+=1;
 
 			for (var i=0; i<k; i++){
 				clusters.push([]);
@@ -509,10 +547,6 @@ class SimulatedAnnealing {
 				centroids[i] = {"x":center.x/clusters[i].length, "y": center.y/clusters[i].length};
 			}
 			
-			console.log("compare: ", previous_clusters, clusters);
-
-			console.log(this.isSame(previous_clusters, clusters));
-
 			if (this.isSame(previous_clusters, clusters) == true){
 				break;
 			}
@@ -540,9 +574,27 @@ class SimulatedAnnealing {
 			context.stroke();
 		}
 
+		this.clusters = clusters;
+		this.centroids = centroids;
+
+
+		context.strokeStyle = "blue";
+		context.fillStyle = "blue";
+
+		context.beginPath();
+
+		for (let cluster of this.clusters){
+			for (var i=0; i<cluster.length-1; i++){
+				context.moveTo(cluster[i].x, cluster[i].y);
+				context.lineTo(cluster[i+1].x, cluster[i+1].y);
+			}
+			context.moveTo(cluster[cluster.length-1].x , cluster[cluster.length-1].y);
+			context.lineTo(cluster[0].x, cluster[0].y);
+		}
+
+		context.stroke();
 
 	}
-
 
 	isSame(originalArray, newArray){
 		var isSame = true;
