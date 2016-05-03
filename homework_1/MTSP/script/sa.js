@@ -525,6 +525,22 @@ class SimulatedAnnealing {
 		console.log("Centroids: ", centroids);
 		console.log("Clusters: ", clusters);
 
+		//plots centroids
+		var canvas = document.getElementById("grid");
+
+		var context = canvas.getContext("2d");
+
+		context.strokeStyle = "#ff80ff";
+		context.fillStyle = "#ff80ff";
+
+		for (let p of centroids) {
+			context.beginPath();
+			context.arc(p.x, p.y, 2, 0, 2 * Math.PI);
+			context.fill();
+			context.stroke();
+		}
+
+
 	}
 
 
