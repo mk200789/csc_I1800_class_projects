@@ -1,6 +1,15 @@
 var timeBegin;
 var timeEnd;
+
+var canvas;
+var context;
+
+var allRoutes, best_solution;
+
 $(document).ready(function(){
+
+	canvas = document.getElementById("grid");
+	context = canvas.getContext("2d");
 	//instantiate a new city taking in city, x, and y value
 	var city = new City(100, 100);
 
@@ -9,6 +18,7 @@ $(document).ready(function(){
 
 	//var sa = new SimulatedAnnealing(1000, 0.9999, city.city_list);
 	var sa = new SimulatedAnnealing(100, 0.99, city.city_list);
+	//var sa = new SimulatedAnnealing(1000, 0.999, city.city_list);
 
 	document.getElementById("temperature").value = 1000;
 	document.getElementById("cool_rate").value = 0.9999;
@@ -18,7 +28,8 @@ $(document).ready(function(){
 	sa.drawInitialCity();
 	//sa.initialRoute();
 	
-	sa.k_means();
+	setTimeout(sa.k_means(), 100);
+	//sa.k_means();
 
 	document.getElementById("start_path").onclick = function(){
 
@@ -26,11 +37,17 @@ $(document).ready(function(){
 		//console.time('Total time');
 		//timeBegin = performance.now();
 		sa.start();
+
+		setTimeout(function(){
+			startDrawRoutes();
+			console.log("Done");
+		},100);
 		
 
 	}
 
 });
+
 
 
 class City {
@@ -40,7 +57,8 @@ class City {
 		this.y = y_coord;
 		
 		//150 cities hard coded
-	/*	
+
+		/*		
 		this.city_list = [{'x': this.x, 'y': this.y},
 						  {'x': 325, 'y': 298},
 						  {'x': 231, 'y': 110},
@@ -192,33 +210,20 @@ class City {
 						  {'x': 447, 'y': 235},
 						  {'x': 80,  'y': 2},
 						  ]; 
-*/		
+		
+	*/
+
 
 		this.city_list = [{'x': this.x, 'y': this.y},
 						  {'x': 244, 'y': 101},
 						  {'x': 87,  'y': 420},
 						  {'x': 256, 'y': 471},
-						  {'x': 13,  'y': 320},
-						  {'x': 234, 'y': 343},
-						  {'x': 296, 'y': 75},
-						  {'x': 435, 'y': 162},
-						  {'x': 258, 'y': 486},
-						  {'x': 123, 'y': 13},
-						  {'x': 112, 'y': 479},
-						  {'x': 422, 'y': 199},
-						  {'x': 87,  'y': 195},
-						  {'x': 8,   'y': 438},
 						  {'x': 71,  'y': 11},
 						  {'x': 248, 'y': 235},
 						  {'x': 339, 'y': 353},
-						  {'x': 233, 'y': 76},
 						  {'x': 353, 'y': 188},
 						  {'x': 354, 'y': 197},
 						  {'x': 400, 'y': 285},
-						  {'x': 350, 'y': 301},
-						  {'x': 241, 'y': 243},
-						  {'x': 68,  'y': 266},
-						  {'x': 328, 'y': 273},
 						  {'x': 409, 'y': 36},
 						  {'x': 223, 'y': 347},
 						  {'x': 119, 'y': 213},
@@ -228,9 +233,7 @@ class City {
 						  {'x': 214, 'y': 264},
 						  {'x': 175, 'y': 242},
 						  {'x': 47,  'y': 279},
-						  {'x': 165, 'y': 148},
-						  {'x': 287, 'y': 347},
-						  {'x': 144, 'y': 444},
+						  {'x': 165, 'y': 148},						  
 						  {'x': 381, 'y': 21}];
 
 		console.log("City instantiated!");
@@ -273,6 +276,10 @@ class SimulatedAnnealing {
 
 		this.centroids = [];
 		this.clusters  = [];
+		this.allRoutes = [];
+
+		this.track = 0;
+
 
 	}
 
@@ -287,21 +294,27 @@ class SimulatedAnnealing {
 		this.best_cost = jQuery.extend([], this.initial_distance);
 		
 		for (var center=0; center <this.centroids.length; center++){
-			console.log(this.clusters[center], this.clusters[center].length);
-			console.log("NEXT!");
 
-			this.temperature = this.original_temp;
-			this.current = this.clusters[center];
-			this.anneal(center);
+				this.temperature = this.original_temp;
+				this.current = this.clusters[center];
+				this.anneal(center);
+
+
 		}
 
-		console.log("STOPE!");
+		//this.startDrawRoutes();
+		allRoutes = this.allRoutes;
+		best_solution = this.best_solution;
+		console.log("STOPE!", this.track);
 
 		//this.anneal();
 	}
 
+
 	anneal(center){
-		//Starts SA	
+		//Starts SA
+
+		console.log("ANNEAL");
 
 		if (this.temperature > 1e-4){
 
@@ -327,7 +340,9 @@ class SimulatedAnnealing {
 			if (current_cost < this.best_cost[center]){
 					this.best_solution[center] = jQuery.extend([], this.current);
 					this.best_cost[center] = current_cost;
-					//this.redraw();
+					this.track = this.track + 1;
+					
+					this.allRoutes.push({"path": this.best_solution[center], "cost": this.best_cost[center]});
 			}
 
 			this.temperature = this.temperature * this.cooling; //linear cooling
@@ -335,20 +350,29 @@ class SimulatedAnnealing {
 		}
 		console.log(this.best_cost);
 		console.log("best cost: ", this.best_cost[center]);
+
+
 		if (this.temperature > 1e-4){
 			//window.setTimeout(this.anneal().bind(this), 10);
-			window.setTimeout(this.anneal(center), 10);
+			//window.setTimeout(this.anneal(center), 100);
+			this.anneal(center);
+				//window.setTimeout(this.anneal(center), 10);
+
+			
 		}
 		else{
 			console.log("Initial cost: ", this.initial_distance[center]);
 			console.log("Best cost: ", this.best_cost[center]);
-			this.redraw();
+			//this.redraw();
 			//timeEnd = performance.now();
 			//console.timeEnd('Total time');
 			//console.log(timeEnd-timeBegin);
 			//document.getElementById("total_time").value = ((timeEnd-timeBegin)*0.001).toFixed(2) + " seconds";
+
 		}
 	}
+
+
 
 	neighbor(cities){
 		//Generates and return a random neighboring solution
@@ -405,43 +429,7 @@ class SimulatedAnnealing {
 		return h;
 	}
 
-
-	redraw(){
-
-		console.log("redraw()");
-
-		var canvas = document.getElementById("grid");
-
-		var context = canvas.getContext("2d");
-
-		context.clearRect(0, 0, canvas.width, canvas.height);
-
-		draw_grid();
-
-		this.drawCity();
-
-		for (let cluster of this.best_solution){
-			context.strokeStyle = "#ff99c2";
-			//context.fillStyle = "#ff99c2";
-			context.beginPath();
-
-			for (var i=0; i <cluster.length-1; i++){
-				console.log("party!");
-				context.moveTo(cluster[i].x, cluster[i].y);
-				context.lineTo(cluster[i+1].x, cluster[i+1].y);
-			}
-			context.stroke();
-
-			context.beginPath();
-			context.strokeStyle = "green";
-			//context.fillStyle = "green";
-
-			context.moveTo(cluster[cluster.length-1].x, cluster[cluster.length-1].y);
-			context.lineTo(cluster[0].x, cluster[0].y);
-			context.stroke();
-		}
-
-
+	redrawCentroids(){
 		context.strokeStyle = "#ff80ff";
 		context.fillStyle = "#ff80ff";
 
@@ -450,42 +438,13 @@ class SimulatedAnnealing {
 			context.arc(p.x, p.y, 2, 0, 2 * Math.PI);
 			context.fill();
 			context.stroke();
-		}
-
-
+		}	
 	}
 
-
-
-	drawCity(){
-
-		console.log("drawCity()");
-		//plots the city on canvas
-		var canvas = document.getElementById("grid");
-
-		var context = canvas.getContext("2d");
-
-		context.strokeStyle = "red";
-		context.fillStyle = "red";
-
-		for (let cluster of this.best_solution){
-			for (let city of cluster){
-				//console.log("C: ", city, cluster);
-				context.beginPath();
-				context.arc(city.x, city.y, 2, 0, 2 * Math.PI);
-				context.fill();
-				context.stroke();
-			}
-		}
-		
-	}
 
 	drawInitialCity(){
-		console.log("drawCity()");
+		//console.log("drawCity()");
 		//plots the city on canvas
-		var canvas = document.getElementById("grid");
-
-		var context = canvas.getContext("2d");
 
 		context.strokeStyle = "red";
 		context.fillStyle = "red";
@@ -503,7 +462,7 @@ class SimulatedAnnealing {
 	
 	k_means(){
 		var n = jQuery.extend([], this.cities);
-		var k = 5;
+		var k = 2;
 
 		var centroids = [];
 		
@@ -560,10 +519,6 @@ class SimulatedAnnealing {
 		console.log("Clusters: ", clusters);
 
 		//plots centroids
-		var canvas = document.getElementById("grid");
-
-		var context = canvas.getContext("2d");
-
 		context.strokeStyle = "#ff80ff";
 		context.fillStyle = "#ff80ff";
 
@@ -623,13 +578,69 @@ class SimulatedAnnealing {
 }
 
 
+function startDrawRoutes(){
+		//after all possible routes are found, we'll start the drawing animation 
+		console.log("hello: ", allRoutes);
+		//erase
+		//setTimeout(function(){context.clearRect(0, 0, canvas.width, canvas.height);}, 100);
+
+		for(let route of allRoutes){
+
+
+			//setTimeout(function(){draw_grid()}, 100);
+			var r = route;
+			//setTimeout(function(){
+				drawCity()
+				drawRoute(r);
+			//}, 1000);
+		}
+}
+
+function drawRoute(route){
+	context.strokeStyle = "#ff99c2";
+	context.beginPath();
+
+	for(var i=0; i<route.path.length-1; i++){
+		var r1 = route.path[i];
+		var r2 = route.path[i+1];
+
+		context.moveTo(r1.x, r1.y);
+		context.lineTo(r2.x, r2.y);
+			
+
+	}
+
+	context.moveTo(route.path[route.path.length-1].x, route.path[route.path.length-1].y);
+	context.lineTo(route.path[0].x, route.path[0].y);
+	context.stroke();
+	
+}
+
+function drawCity(){
+
+	//console.log("drawCity()");
+	//plots the city on canvas
+
+	context.strokeStyle = "red";
+	context.fillStyle = "red";
+
+	for (let cluster of best_solution){
+		for (let city of cluster){
+			//console.log("C: ", city, cluster);
+			context.beginPath();
+			context.arc(city.x, city.y, 2, 0, 2 * Math.PI);
+			context.fill();
+			context.stroke();
+		}
+	}
+		
+}
+
+
+
 function draw_grid(){
 	//draws the grid
 	console.log("GRID!");
-	//create a new canvas
-	var canvas = document.getElementById("grid");
-	//set 2d grid
-	var context = canvas.getContext("2d");
 
 	var cell = 10;
 
@@ -653,6 +664,8 @@ function draw_grid(){
 	context.strokeStyle = "#e0e0eb";
 	context.stroke();
 }
+
+
 
 //Returns the distance between two points
 function getDistance(p1, p2){
