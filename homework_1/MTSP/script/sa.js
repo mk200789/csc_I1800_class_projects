@@ -4,6 +4,8 @@ var timeEnd;
 var canvas;
 var context;
 
+var toggle = 800000;
+
 $(document).ready(function(){
 	canvas = document.getElementById("grid");
 	context = canvas.getContext("2d");
@@ -15,7 +17,8 @@ $(document).ready(function(){
 	//city.randomPopulate();
 
 	//var sa = new SimulatedAnnealing(1000, 0.9999, city.city_list);
-	var sa = new SimulatedAnnealing(1000, 0.99, city.city_list);
+	//var sa = new SimulatedAnnealing(1000, 0.99, city.city_list);
+	var sa = new SimulatedAnnealing(30, 0.99, city.city_list);
 	//var sa = new SimulatedAnnealing(1000, 0.999, city.city_list);
 
 	document.getElementById("temperature").value = 1000;
@@ -110,6 +113,8 @@ class SimulatedAnnealing {
 		this.centroids = [];
 		this.clusters  = [];
 
+		this.track = 0;
+
 	}
 
 
@@ -124,6 +129,7 @@ class SimulatedAnnealing {
 		
 		
 
+		/*
 		var _this = this;
 
 		for (var center=0; center <_this.centroids.length; center++){
@@ -141,14 +147,54 @@ class SimulatedAnnealing {
 			
 
 		}
+		*/
 
+		this.j();
+	}
 
+	j(){
+		console.log("loop: ", this.track, "<",this.centroids.length);
+		if (this.track < this.centroids.length){
+			console.log("c0: ",this.track);
+			this.temperature = this.original_temp;
+			this.current = this.clusters[this.track];
+			var _this = this;
+			setTimeout(function(){
+				console.log("HELLO1");
+				_this.anneal(_this.track);
+			}, 100);
+			
+		}
+
+/*
+		var _this = this;
+
+		setTimeout(function(){
+			_this.track += 1;
+			_this.j();
+
+			if (_this.track < _this.centroids.length){
+				console.log("HELLO2");
+				
+			
+				if (toggle == 800000){
+					console.log("toggle");
+					toggle = 100;
+				}
+				else{
+					toggle = 800000;
+					console.log("toggle1");
+				}
+			
+			}
+		}, toggle);
+		*/
 	}
 
 	anneal(center){
 		//Starts SA	
 
-		if (this.temperature > 1e-4){
+		if (this.temperature > 5.0 ){//1e-4){
 
 			console.log(this.temperature);
 			
@@ -182,7 +228,7 @@ class SimulatedAnnealing {
 			
 		}
 
-		if (this.temperature > 1e-4){
+		if (this.temperature > 5.0){//1e-4){
 			var _this = this;
 			setTimeout(function(){
 				console.log("hit it!");
@@ -193,6 +239,9 @@ class SimulatedAnnealing {
 		else{
 			console.log("Initial cost: ", this.initial_distance);
 			console.log("Best cost: ", this.best_cost);
+			this.track += 1;
+			this.j();
+
 		}
 
 	}
