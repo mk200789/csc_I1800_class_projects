@@ -4,8 +4,6 @@ var timeEnd;
 var canvas;
 var context;
 
-var toggle = 800000;
-
 $(document).ready(function(){
 	canvas = document.getElementById("grid");
 	context = canvas.getContext("2d");
@@ -332,14 +330,13 @@ class SimulatedAnnealing {
 			}
 			
 			this.temperature = this.temperature * this.cooling; //linear cooling
-			//console.log(this.best_cost);
+
 			console.log("best cost: ", this.best_cost[center], center);
 			
 		}
 
 		if (this.temperature > 1e-4){
 			var _this = this;
-
 			setTimeout(function(){
 				console.log("hit it!");
 				_this.anneal(center);
@@ -386,14 +383,15 @@ class SimulatedAnnealing {
 
 	getCost(cities){
 		//Returns the cost of the current path
-		
 		var cost = 0;
 
 		for (var i=0; i<cities.length-1; i++){
 			cost += getDistance(cities[i], cities[i+1]);
+			//console.log("cost between (", cities[i].x , cities[i].y, ") and (", cities[i+1].x , cities[i+1].y, ") is : ", getDistance(cities[i], cities[i+1]));
 		}
 
 		cost += getDistance(cities[0], cities[cities.length-1]);
+		//console.log("cost between (", cities[cities.length-1].x , cities[cities.length-1].y, ") and (", cities[0].x , cities[0].y, ") is : ", getDistance(cities[cities.length-1], cities[0]));
 
 		return cost;
 
@@ -579,7 +577,7 @@ class SimulatedAnnealing {
 
 		context.beginPath();
 
-		for (let cluster of this.clusters){
+		for (let cluster of clusters){
 			for (var i=0; i<cluster.length-1; i++){
 				context.moveTo(cluster[i].x, cluster[i].y);
 				context.lineTo(cluster[i+1].x, cluster[i+1].y);
