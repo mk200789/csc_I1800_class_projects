@@ -251,14 +251,11 @@ class SimulatedAnnealing {
 
 		this.cities = cities;
 
-		//this.initial_distance = 0;
-		this.initial_distance = [];
-
 		this.current = cities;
 
 		var temp = this.k_means(cities);
 
-		this.centroids = temp["centroids"];
+		this.centroids = temp["centroids"]; //salesmen
 
 		this.clusters  = temp["clusters"]; // grouped cities that for each salesman
 
@@ -268,7 +265,7 @@ class SimulatedAnnealing {
 
 		this.best_cost = jQuery.extend([], this.initial_distance);
 
-		this.track = 0;
+		this.salesman_count = 0;
 
 		console.log("initialDistance(): ", this.initial_distance);
 
@@ -288,15 +285,17 @@ class SimulatedAnnealing {
 	}
 
 	nextSalesmen(){
-		console.log("loop: ", this.track, "<",this.centroids.length);
-		if (this.track < this.centroids.length){
-			console.log("c0: ",this.track);
+		//Goes over each salesmen in this.centroids (list of salesmen)
+
+		console.log("loop: ", this.salesman_count, "<",this.centroids.length);
+		if (this.salesman_count < this.centroids.length){
+			console.log("c0: ",this.salesman_count);
 			this.temperature = this.original_temp;
-			this.current = this.clusters[this.track];
+			this.current = this.clusters[this.salesman_count];
 			var _this = this;
 			setTimeout(function(){
 				console.log("HELLO1");
-				_this.anneal(_this.track);
+				_this.anneal(_this.salesman_count);
 			}, 100);
 			
 		}
@@ -316,10 +315,9 @@ class SimulatedAnnealing {
 
 			var new_cost = this.getCost(new_solution);
 			
-			//var ap = this.acceptanceProbability(this.best_cost, new_cost, this.temperature);
 			var ap = this.acceptanceProbability(current_cost, new_cost, this.temperature);
+			
 			var rand = Math.random();
-
 
 			if (ap > rand){
 
@@ -341,6 +339,7 @@ class SimulatedAnnealing {
 
 		if (this.temperature > 1e-4){
 			var _this = this;
+
 			setTimeout(function(){
 				console.log("hit it!");
 				_this.anneal(center);
@@ -350,7 +349,7 @@ class SimulatedAnnealing {
 		else{
 			console.log("Initial cost: ", this.initial_distance);
 			console.log("Best cost: ", this.best_cost);
-			this.track += 1;
+			this.salesman_count += 1;
 			this.nextSalesmen();
 
 		}
@@ -387,15 +386,14 @@ class SimulatedAnnealing {
 
 	getCost(cities){
 		//Returns the cost of the current path
+		
 		var cost = 0;
 
 		for (var i=0; i<cities.length-1; i++){
 			cost += getDistance(cities[i], cities[i+1]);
-			//console.log("cost between (", cities[i].x , cities[i].y, ") and (", cities[i+1].x , cities[i+1].y, ") is : ", getDistance(cities[i], cities[i+1]));
 		}
 
 		cost += getDistance(cities[0], cities[cities.length-1]);
-		//console.log("cost between (", cities[cities.length-1].x , cities[cities.length-1].y, ") and (", cities[0].x , cities[0].y, ") is : ", getDistance(cities[cities.length-1], cities[0]));
 
 		return cost;
 
