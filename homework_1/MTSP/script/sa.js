@@ -1,8 +1,5 @@
-var timeBegin;
-var timeEnd;
-
-var canvas;
-var context;
+var timeBegin, timeEnd;
+var canvas, context;
 
 $(document).ready(function(){
 	canvas = document.getElementById("grid");
@@ -243,8 +240,10 @@ class City {
 
 class SimulatedAnnealing {
 	constructor(temp, cooling, cities){
-		this.temperature = temp; //initial temperature
-		this.original_temp = temp;
+		this.temperature = temp; //keeps track of current temperature
+		
+		this.original_temp = temp; //stores the original temperature
+		
 		this.cooling = cooling;
 
 		this.cities = cities;
@@ -266,6 +265,8 @@ class SimulatedAnnealing {
 		this.salesman_count = 0;
 
 		console.log("initialDistance(): ", this.initial_distance);
+
+		this.redraw();
 
 	}
 
@@ -341,7 +342,6 @@ class SimulatedAnnealing {
 				console.log("hit it!");
 				_this.anneal(center);
 			}, 400);
-			//this.anneal(center);
 		}
 		else{
 			console.log("Initial cost: ", this.initial_distance);
@@ -463,11 +463,9 @@ class SimulatedAnnealing {
 	}
 
 
-
 	drawCity(){
-
+		//draws the city (points)
 		console.log("drawCity()");
-		//plots the city on canvas
 
 		context.strokeStyle = "red";
 		context.fillStyle = "red";
@@ -489,15 +487,13 @@ class SimulatedAnnealing {
 		*/
 
 		var result = [];
-
-		var n = jQuery.extend([], cities);
 		
-		var k = 2;
+		var k = 2; //number of clusters
 
 		var centroids = [];
 		
 		for (var i=0; i<k; i++){
-			centroids.push(n[i]);
+			centroids.push(cities[i]);
 		}
 
 		var previous_clusters = [];
@@ -513,7 +509,7 @@ class SimulatedAnnealing {
 			}
 
 			//assign cities to nearest centroid
-			for (let city of n){
+			for (let city of cities){
 				var min_j = 0;
 				var min_distance = 1000;
 
@@ -529,6 +525,7 @@ class SimulatedAnnealing {
 			
 			for (var i=0; i<k; i++){
 				var center = {"x":0, "y":0};
+
 				for (let city of clusters[i]){
 					center.x += city.x;
 					center.y += city.y;
@@ -541,52 +538,13 @@ class SimulatedAnnealing {
 			}
 
 			previous_clusters = clusters
-
-			//break;
 		}
 
 		console.log("Centroids: ", centroids);
 		console.log("Clusters: ", clusters);
 
-		context.strokeStyle = "red";
-		context.fillStyle = "red";
-
-		for (let city of cities){
-			context.beginPath();
-			context.arc(city.x, city.y, 2, 0, 2 * Math.PI);
-			context.fill();
-			context.stroke();			
-		}	
-
-		context.strokeStyle = "#ff80ff";
-		context.fillStyle = "#ff80ff";
-
-		for (let p of centroids) {
-			context.beginPath();
-			context.arc(p.x, p.y, 2, 0, 2 * Math.PI);
-			context.fill();
-			context.stroke();
-		}
-
 		result["clusters"] = clusters;
 		result["centroids"] = centroids;
-
-
-		context.strokeStyle = "blue";
-		context.fillStyle = "blue";
-
-		context.beginPath();
-
-		for (let cluster of clusters){
-			for (var i=0; i<cluster.length-1; i++){
-				context.moveTo(cluster[i].x, cluster[i].y);
-				context.lineTo(cluster[i+1].x, cluster[i+1].y);
-			}
-			context.moveTo(cluster[cluster.length-1].x , cluster[cluster.length-1].y);
-			context.lineTo(cluster[0].x, cluster[0].y);
-		}
-
-		context.stroke();
 
 		return result;
 
@@ -594,6 +552,7 @@ class SimulatedAnnealing {
 
 
 	isSame(originalArray, newArray){
+		//checks if two arrays are the same, if they're the same size they're not the same, so return
 		var isSame = true;
 
 		if (originalArray.length == 0){
@@ -647,16 +606,15 @@ function draw_grid(){
 	context.stroke();
 }
 
-//Returns the distance between two points
+
 function getDistance(p1, p2){
+	//Returns the distance between two points
 	return Math.sqrt((p1.x-p2.x)*(p1.x-p2.x) + (p1.y-p2.y)*(p1.y-p2.y));
 }
 
 
-// Returns a random integer between min (included) and max (included)
-// Using Math.round() will give you a non-uniform distribution!
 function getRandomInt(min, max) {
+	// Returns a random integer between min (included) and max (included)
+	// Using Math.round() will give you a non-uniform distribution!
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-
