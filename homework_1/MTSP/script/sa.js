@@ -18,8 +18,8 @@ $(document).ready(function(){
 
 	//var sa = new SimulatedAnnealing(1000, 0.9999, city.city_list);
 	//var sa = new SimulatedAnnealing(1000, 0.99, city.city_list);
-	var sa = new SimulatedAnnealing(30, 0.99, city.city_list);
-	//var sa = new SimulatedAnnealing(1000, 0.999, city.city_list);
+	//var sa = new SimulatedAnnealing(50, 0.99, city.city_list);
+	var sa = new SimulatedAnnealing(100, 0.99, city.city_list);
 
 	document.getElementById("temperature").value = 1000;
 	document.getElementById("cool_rate").value = 0.9999;
@@ -42,6 +42,7 @@ class City {
 		this.y = y_coord;
 		
 
+		
 		this.city_list = [{'x': this.x, 'y': this.y},
 						  {'x': 244, 'y': 101},
 						  {'x': 13,  'y': 320},
@@ -71,6 +72,8 @@ class City {
 						  {'x': 287, 'y': 347},
 						  {'x': 144, 'y': 444},
 						  {'x': 381, 'y': 21}];
+
+		
 
 		console.log("City instantiated!");
 	}
@@ -127,28 +130,6 @@ class SimulatedAnnealing {
 
 		this.best_cost = jQuery.extend([], this.initial_distance);
 		
-		
-
-		/*
-		var _this = this;
-
-		for (var center=0; center <_this.centroids.length; center++){
-			
-			var c = center;
-			console.log(c);
-
-			setTimeout(function(){
-				console.log("c0: ", c);
-				_this.temperature = _this.original_temp;
-				_this.current = _this.clusters[c];
-				_this.anneal(c);
-			}, 100);
-			break;
-			
-
-		}
-		*/
-
 		this.j();
 	}
 
@@ -194,7 +175,7 @@ class SimulatedAnnealing {
 	anneal(center){
 		//Starts SA	
 
-		if (this.temperature > 5.0 ){//1e-4){
+		if (this.temperature > 1e-4){
 
 			console.log(this.temperature);
 			
@@ -228,7 +209,7 @@ class SimulatedAnnealing {
 			
 		}
 
-		if (this.temperature > 5.0){//1e-4){
+		if (this.temperature > 1e-4){
 			var _this = this;
 			setTimeout(function(){
 				console.log("hit it!");
