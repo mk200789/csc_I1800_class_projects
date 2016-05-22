@@ -60,9 +60,9 @@ def output(y, target):
 	else:
 		return target
 
+
 def training(training_set, weight, alpha):
 	iterations = 0
-
 
 	while(1):
 		error_count = 0
@@ -89,7 +89,19 @@ def training(training_set, weight, alpha):
 	return weight, iterations
 
 
-	
+def testing(data, weight, noise):
+
+
+	for i in range(len(data)):
+
+		target = data[i][1]
+
+		xw = dot(data[i][0], weight[i])
+		y_in = output(xw, target)
+
+		if array_equal(array(target-y_in), array([0,0,0,0,0,0,0])):
+			print i, "pass!"
+
 
 if __name__ == '__main__':
 	#get the training data
@@ -105,5 +117,7 @@ if __name__ == '__main__':
 	#print "Final weights: ", final_weights
 	
 	print "iterations: ", iterations
+
+	testing(training_data, final_weights, 1)
 
 
