@@ -7,7 +7,7 @@ _xxxxx_
 _x___x_
 _x___x_
 xxx_xxx
-p
+a
 xxxxxx_
 _x____x
 _x____x
@@ -17,7 +17,7 @@ _x____x
 _x____x
 _x____x
 xxxxxx_
-p
+b
 __xxxxx
 _x____x
 _x_____
@@ -27,7 +27,17 @@ _x_____
 _x_____
 _x____x
 __xxxx_
-p
+c
+xxxxx__
+_x___x_
+_x___x_
+_x___x_
+_x___x_
+_x___x_
+_x___x_
+_x___x_
+xxxxx__
+d
 xxxxxxx
 _x____x
 _x_____
@@ -37,7 +47,7 @@ _x_x___
 _x_____
 _x____x
 xxxxxxx
-p
+e
 ___xxxx
 _____x_
 _____x_
@@ -47,7 +57,7 @@ _____x_
 _x___x_
 _x___x_
 __xxx__
-p
+j
 xxx__xx
 _x__x__
 _x_x___
@@ -57,4 +67,4 @@ _x_x___
 _x__x__
 _x___x_
 xxx__xx
-p
+k
