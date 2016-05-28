@@ -11,10 +11,8 @@ $(document).ready(function(){
 	draw_grid();
 	//city.randomPopulate();
 
-	//var sa = new SimulatedAnnealing(1000, 0.9999, city.city_list);
-	//var sa = new SimulatedAnnealing(1000, 0.99, city.city_list);
+	var sa = new SimulatedAnnealing(100, 0.999, city.city_list);
 	//var sa = new SimulatedAnnealing(50, 0.99, city.city_list);
-	var sa = new SimulatedAnnealing(50, 0.99, city.city_list);
 
 	document.getElementById("temperature").value = 1000;
 	document.getElementById("cool_rate").value = 0.9999;
@@ -22,6 +20,7 @@ $(document).ready(function(){
 
 	document.getElementById("start_path").onclick = function(){
 		console.log("start!");
+		timeBegin = performance.now();
 		sa.nextSalesmen();
 	}
 
@@ -34,7 +33,7 @@ class City {
 		this.x = x_coord;
 		this.y = y_coord;
 		
-		/*
+		
 		this.city_list = [{'x': this.x, 'y': this.y},
 						  {'x': 325, 'y': 298},
 						  {'x': 231, 'y': 110},
@@ -186,8 +185,9 @@ class City {
 						  {'x': 447, 'y': 235},
 						  {'x': 80,  'y': 2},
 						  ]; 
-		*/
 		
+		
+		/*
 		this.city_list = [{'x': this.x, 'y': this.y},
 						  {'x': 244, 'y': 101},
 						  {'x': 13,  'y': 320},
@@ -218,7 +218,7 @@ class City {
 						  {'x': 144, 'y': 444},
 						  {'x': 381, 'y': 21}];
 
-		
+		*/
 
 		console.log("City instantiated!");
 	}
@@ -291,12 +291,20 @@ class SimulatedAnnealing {
 			console.log("c0: ",this.salesman_count);
 			this.temperature = this.original_temp;
 			this.current = this.clusters[this.salesman_count];
+
 			var _this = this;
 			setTimeout(function(){
 				console.log("HELLO1");
+				_this.redraw();
 				_this.anneal(_this.salesman_count);
-			}, 100);
+			}, 2);
 			
+		}
+		else{
+			//draw the last salemen's route
+			this.redraw();
+			timeEnd = performance.now();
+			console.log("Total time: ", ((timeEnd-timeBegin)*0.001).toFixed(2), " seconds" );
 		}
 	}
 
@@ -327,7 +335,7 @@ class SimulatedAnnealing {
 			if (current_cost < this.best_cost[center]){
 					this.best_solution[center] = jQuery.extend([], this.current);
 					this.best_cost[center] = current_cost;
-					this.redraw();
+					//this.redraw();
 			}
 			
 			this.temperature = this.temperature * this.cooling; //linear cooling
@@ -341,7 +349,7 @@ class SimulatedAnnealing {
 			setTimeout(function(){
 				console.log("hit it!");
 				_this.anneal(center);
-			}, 400);
+			}, 2); //400
 		}
 		else{
 			console.log("Initial cost: ", this.initial_distance);
@@ -418,13 +426,13 @@ class SimulatedAnnealing {
 		setTimeout(function(){
 			console.log("c1");
 			draw_grid();
-		},100);
+		},50); //100
 
 		var _this = this;
 		setTimeout(function(){
 			console.log("c2");
 			_this.drawCity();
-		}, 200);
+		}, 100); //200
 
 		setTimeout(function(){
 			console.log("c3");
@@ -459,7 +467,7 @@ class SimulatedAnnealing {
 				context.fill();
 				context.stroke();
 			}
-		},300);
+		},150); //300
 	}
 
 
@@ -488,9 +496,9 @@ class SimulatedAnnealing {
 
 		var result = [];
 		
-		var k = 2; //number of clusters
+		var k = 5; //number of clusters
 
-		var centroids = [];
+		var centroids = []; 
 		
 		for (var i=0; i<k; i++){
 			centroids.push(cities[i]);
