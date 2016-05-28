@@ -1,50 +1,50 @@
 import numpy as np
 import copy
-from itertools import cycle
+from prettytable import PrettyTable
 
 def extractData():
 	#Returns a list of input letters and its corresponding output and the character
 	input_raw_bipolar_vals = []
 	temp = []
 
-	file = open('input.txt', 'r')
+	file = open('input3.txt', 'r')
 
 	for char in file.read():
 		if char == "\n":
 			pass
-		#if char == "a" or char == "b" or char == "c" or char == "e" or char == "j" or char == "k":
-		if char == "a":
-			temp.append(1)
-			input_raw_bipolar_vals.append((np.array(temp), np.array([1, -1, -1, -1 ,-1 ,-1, -1]), char))
-			temp = []
-		if char == "b":
-			temp.append(1)
-			input_raw_bipolar_vals.append((np.array(temp), np.array([-1, 1, -1, -1 ,-1 ,-1, -1]), char))
-			temp = []
-		if char == "c":
-			temp.append(1)
-			input_raw_bipolar_vals.append((np.array(temp), np.array([-1, -1, 1, -1 ,-1 ,-1, -1]), char))
-			temp = []
-		if char == "d":
-			temp.append(1)
-			input_raw_bipolar_vals.append((np.array(temp), np.array([-1, -1, -1, 1 ,-1 ,-1, -1]), char))
-			temp = []
-		if char == "e":
-			temp.append(1)
-			input_raw_bipolar_vals.append((np.array(temp), np.array([-1, -1, -1, -1, 1, -1, -1]), char))
-			temp = []
-		if char == "j":
-			temp.append(1)
-			input_raw_bipolar_vals.append((np.array(temp), np.array([-1, -1, -1, -1 ,-1 , 1, -1]), char))
-			temp = []
-		if char == "k":
-			temp.append(1)
-			input_raw_bipolar_vals.append((np.array(temp), np.array([-1, -1, -1, -1 , -1, -1, 1]), char))
-			temp = []
 		if char == "_":
 			temp.append(-1)
 		if char == "x":
 			temp.append(1)
+		if char != "_" and char != "x":
+			if char == "A":
+				temp.append(1)
+				input_raw_bipolar_vals.append((np.array(temp), np.array([1, -1, -1, -1 ,-1 ,-1, -1]), char))
+				temp = []
+			if char == "B":
+				temp.append(1)
+				input_raw_bipolar_vals.append((np.array(temp), np.array([-1, 1, -1, -1 ,-1 ,-1, -1]), char))
+				temp = []
+			if char == "C":
+				temp.append(1)
+				input_raw_bipolar_vals.append((np.array(temp), np.array([-1, -1, 1, -1 ,-1 ,-1, -1]), char))
+				temp = []
+			if char == "D":
+				temp.append(1)
+				input_raw_bipolar_vals.append((np.array(temp), np.array([-1, -1, -1, 1 ,-1 ,-1, -1]), char))
+				temp = []
+			if char == "E":
+				temp.append(1)
+				input_raw_bipolar_vals.append((np.array(temp), np.array([-1, -1, -1, -1, 1, -1, -1]), char))
+				temp = []
+			if char == "J":
+				temp.append(1)
+				input_raw_bipolar_vals.append((np.array(temp), np.array([-1, -1, -1, -1 ,-1 , 1, -1]), char))
+				temp = []
+			if char == "K":
+				temp.append(1)
+				input_raw_bipolar_vals.append((np.array(temp), np.array([-1, -1, -1, -1 , -1, -1, 1]), char))
+				temp = []
 
 	return input_raw_bipolar_vals
 
@@ -253,7 +253,7 @@ def training(training_set, weights, alpha, threshold):
 
 			for j in range(len(training_set)):
 				#going through the training set for each input
-				xw = np.dot(training_set[i][0], weights[j]) #+ b[j]
+				xw = np.dot(training_set[i][0], weights[j]) 
 
 				y_in = output(xw, threshold)
 
@@ -272,48 +272,68 @@ def training(training_set, weights, alpha, threshold):
 	return weights, iterations
 
 
-def testing(iter_test, data, weight, noise, threshold):
+def testing(data, weight, noise, threshold, a):
 	testing_data = copy.deepcopy(data)
 
-	total_error = {"a": 0, "b": 0, "c": 0, "d": 0, "e": 0, "j":0 ,"k":0}
+	total_error = { "A": {"A": 0, "B": 0, "C": 0, "D": 0, "E": 0, "J":0 ,"K":0}, 
+					"B": {"A": 0, "B": 0, "C": 0, "D": 0, "E": 0, "J":0 ,"K":0}, 
+					"C": {"A": 0, "B": 0, "C": 0, "D": 0, "E": 0, "J":0 ,"K":0}, 
+					"D": {"A": 0, "B": 0, "C": 0, "D": 0, "E": 0, "J":0 ,"K":0}, 
+					"E": {"A": 0, "B": 0, "C": 0, "D": 0, "E": 0, "J":0 ,"K":0}, 
+					"J":{"A": 0, "B": 0, "C": 0, "D": 0, "E": 0, "J":0 ,"K":0} ,
+					"K":{"A": 0, "B": 0, "C": 0, "D": 0, "E": 0, "J":0 ,"K":0}}
 
-	while (iter_test > 0):
 
-		if noise:
-			#displ_val = [[56, 54], [51, 6], [27, 12], [38, 47], [7, 14], [22, 5], [59, 55]]
+	if noise:
+		#displ_val = [[56, 54], [51, 6], [27, 12], [38, 47], [7, 14], [22, 5], [59, 55]]
+		#displ_val = np.random.randint(0, 64, size=noise)
+		for x in range(len(testing_data)):
+			#a list of amount of noise randomly chosen in the input
+			displ_val = np.random.randint(0, 64, size=noise)
 
-			for x in range(len(testing_data)):
-				#a list of amount of noise randomly chosen in the input
-				displ_val = np.random.randint(0, 63, size=noise)
+			for i in displ_val:
+				#print i, testing_data[x][0][i]
+				if testing_data[x][0][i] == -1:
+					testing_data[x][0][i] = 1
+				else:
+					testing_data[x][0][i] = -1
 
-				for i in displ_val:
-					#print i, testing_data[x][0][i]
-					if testing_data[x][0][i] == -1:
-						testing_data[x][0][i] = 1
-					else:
-						testing_data[x][0][i] = -1
-		
 
-		for i in range(len(testing_data)):
+	
+	for x, target, letter in testing_data:
+		#going through each input
+		#print "Testing letter: ", letter
 
-			target = testing_data[i][1]
-
-			xw = np.dot(testing_data[i][0], weight[i])
+		for j in range(len(testing_data)):
+			#xw = np.dot(testing_data[j][0], weight[j])
+			xw = np.dot(testing_data[j][0], weight[j])
 			y_in = output(xw, threshold)
+			
+			error = target[j] - y_in
 
-
-			if np.array_equal(np.array(target-y_in), np.array([0,0,0,0,0,0,0])):
-				#print "PASS!", testing_data[i][2]
-				pass
+			if error != 0:
+				#print "Letter ", testing_data[j][2], " is not ", letter
+				total_error[letter][testing_data[j][2]] += 1
 			else:
-				#print "FAIL", testing_data[i][2]
-				total_error[testing_data[i][2]] += 1
-
-		iter_test -=1
+				#print "Letter ", testing_data[j][2], " is  ", letter
+				pass
 
 	return total_error
 
 
+
+def report(result, noise):
+
+	print "Noise: ", noise
+	x = PrettyTable(["","A", "B", "C", "D", "E", "J", "K"])
+
+	for i in result:
+		x.add_row([i, result[i]["A"], result[i]["B"], result[i]["C"], result[i]["D"], result[i]["E"], result[i]["J"], result[i]["K"]])
+
+
+	print x
+
+	
 
 if __name__ == '__main__':
 	#get the training data
@@ -324,19 +344,28 @@ if __name__ == '__main__':
 
 	#print "Initial weights: ", weights
 	learning_rate = 0.1
-	threshold = 0
-	noise = 1
-	no_iteration = 10
+	threshold = 0.5
+	noise = 5
 
 
 	final_weights, iterations = training(training_data, weights, learning_rate, threshold)
 
 	#print "Final weights: ", final_weights
 	
-	print "iterations: ", iterations
+	print "iterations to converge: ", iterations
 
-	#total_error = testing(no_iteration, training_data, final_weights, noise, threshold)
+	total_error = testing(training_data, final_weights, noise, threshold, learning_rate)
 
-	#for i in total_error:
-	#	print i , " : ", total_error[i]/float(no_iteration)
+	report(total_error, noise)
 
+	total_error = testing(training_data, final_weights, 10, threshold, learning_rate)
+
+	report(total_error, 10)
+
+	total_error = testing(training_data, final_weights, 15, threshold, learning_rate)
+
+	report(total_error, 15)
+
+	total_error = testing(training_data, final_weights, 20, threshold, learning_rate)
+
+	report(total_error, 20)
